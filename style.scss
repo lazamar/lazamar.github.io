@@ -18,9 +18,10 @@ html {
 }
 
 body {
-	background: $white;
+	background: #eee;
   font: 18px/1.4 $helvetica;
   color: $darkGray;
+  min-height: 100vh;
 }
 
 .container {
@@ -36,7 +37,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: bold;
 
   line-height: 1.7;
-  margin: 1em 0 15px;
+  margin: 0em 0 15px;
   padding: 0;
 
   @include mobile {
@@ -151,12 +152,19 @@ img {
 //
 
 .wrapper-masthead {
-  margin-bottom: 50px;
+  margin-bottom: 30px;
+}
+.container-masterhead{
+  margin: 0 50px;
+
+  @include mobile{
+    margin: 0;
+  }
 }
 
 .masthead {
   padding: 20px 0;
-  border-bottom: 1px solid $lightGray;
+  // border-bottom: 1px solid $lightGray;
 
   @include mobile {
     text-align: center;
@@ -242,8 +250,8 @@ nav {
 //
 
 .posts > .post {
-  padding-bottom: 2em;
-  border-bottom: 1px solid $lightGray;
+  padding-bottom: 1em;
+  // border-bottom: 1px solid $lightGray;
 }
 
 .posts > .post:last-child {
@@ -275,12 +283,14 @@ nav {
   margin-top: 50px;
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
-  background-color: $lightGray;
+  background-color: #222;
+  min-height: 200px;
 }
 
 footer {
   padding: 20px 0;
   text-align: center;
+
 }
 
 // Settled on moving the import of syntax highlighting to the bottom of the CSS
