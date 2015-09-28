@@ -1,0 +1,16 @@
+#hidden{
+  display: none;
+}
+img{
+  max-width:42em;
+}
+#content p{
+  line-height: 1.5em;
+}
+h1 {
+  font-size: 3em;
+}
+
+body{
+  font-family: Helvetica, Arial, Freesans, clean, sans-serif !important;
+}
