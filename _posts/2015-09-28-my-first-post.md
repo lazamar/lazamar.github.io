@@ -10,7 +10,7 @@ Well, there you go.
 > In everything.
 
 I can even add some code snippets:
-
+{% highlight javascript %}
       angular.module('must', ['ionic', 'must.controllers', 'must.services','must.directives'])
 
       .run(function($ionicPlatform) {
@@ -28,5 +28,5 @@ I can even add some code snippets:
           }
         });
       })
-
+{% endhighlight %}
 See. It works like a charm
