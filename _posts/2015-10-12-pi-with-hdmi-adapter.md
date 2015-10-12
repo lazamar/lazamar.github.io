@@ -22,9 +22,9 @@ sudo nano /boot/config.txt
 {% endhighlight %}
 
 Now look for the line where it says
-```
-#hdmi_safe=1
-```
+
+      #hdmi_safe=1
+
 and remove the `#` from the beginning of the sentence.
 
 Now press `Ctrl + X` and then press `y` and then `Enter`. Now restart your Pi
