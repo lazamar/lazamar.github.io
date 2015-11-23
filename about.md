@@ -11,12 +11,20 @@ I'm a Pebble fan and proud owner of a [Kickstarter Pebble Time](https://www.kick
 - [Matrix](http://apps.getpebble.com/en_US/application/55ad3d946749cded0f000098)
 - [Percentage](http://apps.getpebble.com/en_US/application/55ad34495ce176822500008c)
 
-They are open source so if you'd like to see what's going on at the backstage you can go [here](https://github.com/lazamar/Matrix-Watchface) and [here](https://github.com/lazamar/Percentage-Watchface), respectively.
+They are open source so if you'd like to see what's going on at the backstage you can go [here](https://github.com/lazamar/Matrix-Watchface) and [here](https://github.com/lazamar/Percentage-Watchface).
+
+I'm (@marcelolaza)[https://twitter.com/Marcelolaza] on Twitter and (+Marcelo Lazaroni)[https://plus.google.com/101035105630256214146] on Google+.
 
 I mostly write about easy things, like programming and algorithms, but sometimes I like to write about really hard stuff like life and people. For these days I have [It's all about focus](http://itsallaboutfocus.com/).
 
 Here are a couple of cool projects I am working on; contributions are very welcome.
 
+
 ## [Markdown Reader](https://github.com/lazamar/Markdown-Reader)
 
 A simple, lightweight, open source desktop application to open Markdown files for Windows, Mac and Linux. Markdown editing is coming soon.
+
+## [Archimedes](https://github.com/lazamar/Archimedes)
+
+A Smart Mirror for the Internet of Things. Using NodeJs and Electron, Archimedes is voice controlled
+assistant that lives behind a mirror's surface.
