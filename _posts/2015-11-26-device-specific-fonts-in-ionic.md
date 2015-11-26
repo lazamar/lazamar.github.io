@@ -13,11 +13,11 @@ Add This to your `index.html` right after your Ionic css `link` tag.
 
 {% highlight javascript %}
 <script>
-    if (/Android/i.test(navigator.userAgent)) { // Check if is Android
+    if (/Android/i.test(navigator.userAgent)) { // Check if Android
         document.write('<link href="css/android.min.css" rel="stylesheet">');
-    } else if(/iPad|iPhone|iPod/.test(navigator.userAgent)){
+    } else if(/iPad|iPhone|iPod/.test(navigator.userAgent)){ //Check if iPhone
         document.write('<link href="css/ios.min.css" rel="stylesheet">');
-    } else {
+    } else { //If it is neither then it is a Windows Phone.
         document.write('<link href="css/windows-phone.min.css" rel="stylesheet">');
     };
 </script>
@@ -66,9 +66,9 @@ Let's add that inside the `<head>` of our `index.html`. This is how it looks lik
 
 {% highlight javascript %}
 <script>
-    if (/Android/i.test(navigator.userAgent)) { // Check if is Android
+    if (/Android/i.test(navigator.userAgent)) { // Check if Android
         document.write('<link href="css/android.min.css" rel="stylesheet">');
-    } else if(/iPad|iPhone|iPod/.test(navigator.userAgent)){ //Check if is iPhone
+    } else if(/iPad|iPhone|iPod/.test(navigator.userAgent)){ //Check if iPhone
         document.write('<link href="css/ios.min.css" rel="stylesheet">');
     } else { //If it is neither then it is a Windows Phone.
         document.write('<link href="css/windows-phone.min.css" rel="stylesheet">');
@@ -77,4 +77,4 @@ Let's add that inside the `<head>` of our `index.html`. This is how it looks lik
 {% endhighlight %}
 
 
- And there you go. You can do a lot more stuff than just adding different fonts. The sky is the limit. 
+ And there you go. You can do a lot more stuff than just adding different fonts. The sky is the limit.
