@@ -13,7 +13,7 @@ I'm a Pebble fan and proud owner of a [Kickstarter Pebble Time](https://www.kick
 
 They are open source so if you'd like to see what's going on at the backstage you can go [here](https://github.com/lazamar/Matrix-Watchface) and [here](https://github.com/lazamar/Percentage-Watchface).
 
-I'm (@marcelolaza)[https://twitter.com/Marcelolaza] on Twitter and (+Marcelo Lazaroni)[https://plus.google.com/101035105630256214146] on Google+.
+I'm [@marcelolaza](https://twitter.com/Marcelolaza) on Twitter and [+Marcelo Lazaroni](https://plus.google.com/101035105630256214146) on Google+.
 
 I mostly write about easy things, like programming and algorithms, but sometimes I like to write about really hard stuff like life and people. For these days I have [It's all about focus](http://itsallaboutfocus.com/).
 
