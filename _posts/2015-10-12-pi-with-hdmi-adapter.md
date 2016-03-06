@@ -17,9 +17,9 @@ do. It has a file called `confix.txt` which is read by the GPU before the ARM co
 is initialised. All we need to do is to go to that file and uncomment the line
 where it says `hdmi_safe=1`. To do that run:
 
-{% highlight bash %}
+``` bash
 sudo nano /boot/config.txt
-{% endhighlight %}
+```
 
 Now look for the line where it says
 

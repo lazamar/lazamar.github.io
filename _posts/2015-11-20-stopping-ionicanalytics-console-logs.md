@@ -8,9 +8,9 @@ Ionic provides a very nice system for you to track the usage of your app with th
 ---
 
 **TL;DR**
-{% highlight javascript %}
+``` javascript
 	$ionicAnalytics.logger._silence  = true;
-{% endhighlight %}
+```
 
 ---
 
@@ -34,14 +34,14 @@ We get loads of results in a couple of different files. Some of them finish in `
  Well, there are 17 occurrences of `$ionicAnalytics` there. But most of them are just references to it. We are interested in seeing what's going on when this is defined. As 17 is not much we can just go through them and check where that happens. We then find this piece of code:
 
 
-{% highlight javascript %}
+``` javascript
   angular.module('ionic.service.analytics', ['ionic']).value('IONIC_ANALYTICS_VERSION', Ionic.Analytics.version).factory('$ionicAnalytics', [function () {
     if (!IonicAngularAnalytics) {
       IonicAngularAnalytics = new Ionic.Analytics("DEFER_REGISTER");
     }
     return IonicAngularAnalytics;
   }])
-{% endhighlight %}
+```
 
 
 There we go! That's the definition of the service. But that doesn't say much. It just returns an object created with this `Ionic.Analytics` constructor. Well, let's look for the definition of this constructor then.
@@ -50,24 +50,24 @@ There we go! That's the definition of the service. But that doesn't say much. It
 But that is kind of tricky. Because it is a property of the `Ionic` object and it may be defined inside of it without using the dot notation and looking just for `Analytics` returns 73 results, which is a lot to go through. But we are smarter than that. If it is a property it must have been assigned a value at some point, so let's look for `Analytics =`. This shrinks our search space to 6 occurrences and as there it is, the first result is exactly what we were looking for.
 
 
-{% highlight javascript %}
+``` javascript
 	var Analytics = (function () {
   function Analytics(config) {
-{% endhighlight %}
+```
 
 
 If you give a quick look at this function this line will catch your attention
 
 
-{% highlight javascript %}
+``` javascript
 this.logger._silence = true`
-{% endhighlight %}
+```
 
 
 This seems to be exactly what we are looking for. But this logger stuff seems to be set to true already, why is it still logging stuff? We now could carefully read through the 400 lines of the function and see what exactly is going on. Or we can just try to set this again and hope for the best. With so many deadlines I like the last one a lot better. That is how we do it:
 
-{% highlight javascript %}
+``` javascript
 	$ionicAnalytics.logger._silence  = true;
-{% endhighlight %}
+```
 
 Tadah! It works. Now we have a nice and clean console and a sourcedigger badge.

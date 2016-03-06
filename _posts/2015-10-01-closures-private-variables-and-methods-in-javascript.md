@@ -14,7 +14,7 @@ of an object should be private or public in their declaration, but it does
 give us a way to implement them as such.
 
 Give a look at the following code:
-{% highlight javascript %}
+``` javascript
 var myBankAccount = (function(){
   var balance = 0;
 
@@ -24,7 +24,7 @@ var myBankAccount = (function(){
                 }
   }
 })()
-{% endhighlight %}
+```
 
 Here we are declaring a variable, `myBankAccount`, and assigning something to it.
 In the other sign of the assignment we are then declaring a function, but notice
@@ -48,7 +48,7 @@ called a **closure**.
 
 Let's make it more interesting and add a couple more things.
 
-{% highlight javascript %}
+``` javascript
 var bankAccount = function(initialBalance){
   // Let's initialise the balance with the value passed as an argument
   // to the function.
@@ -84,7 +84,7 @@ var marceloAccount = bankAccount(100);
 marceloAccount.deposit(10) // 110
 marceloAccount. withdraw(80) // true
 marceloAccount. withdraw(80) // false
-{% endhighlight %}
+```
 
 Here we did a couple of things differently. Now we are not declaring an anonymous
 function and calling it straight away, we are assigning the function to a variable

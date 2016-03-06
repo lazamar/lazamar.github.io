@@ -11,7 +11,7 @@ But sometimes we need more than `.platform-android` and `.platform-ios`. We need
 
 Add This to your `index.html` right after your Ionic css `link` tag.
 
-{% highlight javascript %}
+``` javascript
 <script>
     if (/Android/i.test(navigator.userAgent)) { // Check if Android
         document.write('<link href="css/android.min.css" rel="stylesheet">');
@@ -21,7 +21,7 @@ Add This to your `index.html` right after your Ionic css `link` tag.
         document.write('<link href="css/windows-phone.min.css" rel="stylesheet">');
     };
 </script>
-{% endhighlight %}
+```
 
 ---
 
@@ -37,7 +37,7 @@ You could just put your additional css files under `www/css`, but if we want to 
 By default Ionic converts only the `ionic.app.scss` file into css. To get extra files into that mix we need to give a look at our `gulpfile.js` and check what it is doing.
 
 Looking for scss we will find this task:
-{% highlight javascript %}
+``` javascript
 gulp.task('sass', function(done) {
   gulp.src('./scss/ionic.app.scss')
     .pipe(sass())
@@ -50,7 +50,7 @@ gulp.task('sass', function(done) {
     .pipe(gulp.dest('./www/css/'))
     .on('end', done);
 });
-{% endhighlight %}
+```
 
 We can see that it is using the sass command on `/scss/ionic.app.scss`, displaying any errors and throwing the output at `/www/css/`. It is also minifying the file and changing the minified version's extension to `.min.css.
 
@@ -64,7 +64,7 @@ Now that we have the files we just have to load the right one. For that we will 
 
 Let's add that inside the `<head>` of our `index.html`. This is how it looks like:
 
-{% highlight javascript %}
+``` javascript
 <script>
     if (/Android/i.test(navigator.userAgent)) { // Check if Android
         document.write('<link href="css/android.min.css" rel="stylesheet">');
@@ -74,7 +74,7 @@ Let's add that inside the `<head>` of our `index.html`. This is how it looks lik
         document.write('<link href="css/windows-phone.min.css" rel="stylesheet">');
     };
 </script>
-{% endhighlight %}
+```
 
 
  And there you go. You can do a lot more stuff than just adding different fonts. The sky is the limit.
