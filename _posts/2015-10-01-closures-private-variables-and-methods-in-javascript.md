@@ -14,6 +14,7 @@ of an object should be private or public in their declaration, but it does
 give us a way to implement them as such.
 
 Give a look at the following code:
+
 ``` javascript
 var myBankAccount = (function(){
   var balance = 0;
