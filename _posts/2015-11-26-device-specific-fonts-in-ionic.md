@@ -37,6 +37,7 @@ You could just put your additional css files under `www/css`, but if we want to 
 By default Ionic converts only the `ionic.app.scss` file into css. To get extra files into that mix we need to give a look at our `gulpfile.js` and check what it is doing.
 
 Looking for scss we will find this task:
+
 ``` javascript
 gulp.task('sass', function(done) {
   gulp.src('./scss/ionic.app.scss')

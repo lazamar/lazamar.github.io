@@ -10,6 +10,7 @@ any HTTP request in your code with **jasmine-ajax**.
 **TL;DR**
 
 - Capture and send custom responses to XHR requests with:
+
 ``` javascript
 require('jasmine-ajax')
 jasmine.Ajax.install();
@@ -19,6 +20,7 @@ myFunctionThatMakesRequests();
 request = jasmine.Ajax.requests.mostRecent();
 request.respondWith({ status: 200, responseText: "Oh yeah!" });
 ```
+
 - Use a `fetch` polyfill that uses xhr to intercept requests from the fetch API like this:
 window.fetch = undefined;
 require('whatwg-fetch')
@@ -43,6 +45,7 @@ Another alternative would be to mock the `XMLHttpRequest` object ourselves. But 
 Jasmine has a module called **[jasmine-ajax](https://github.com/jasmine/jasmine-ajax)**, which makes testing xhr requests a breeze. Just require `jasmine-ajax` and you are ready to rumble.
 
 Here is an example of it in action :
+
 ``` javascript
 require('jasmine-ajax')
 
@@ -63,6 +66,7 @@ As you can see, we didn't have to change anything in our `myFunctionThatMakesReq
 In our small snippet of code we just answered the request, but didn't care about what happened to the response. In a real test we must check not only if the request was right, but also if the response was adequately processed. For that we will need to write *asynchronous tests*.  
 
 To make our test asynchronous we just need to include inside our suite (`describe` in Jasmine) a setup function (`beforeEach`) and call it's first argument whenever we are ready to start our specs (`it`). We will make the request and answer it within the setup function so that in our specs we can test the outcome of the entire process. It will look like this:
+
 ``` javascript
 describe('myFunctionThatMakesRequests', function () {
   // Put our http response in a variable.
@@ -103,6 +107,7 @@ describe('myFunctionThatMakesRequests', function () {
   });
 })
 ```
+
 One interesting thing to note is the the `request` variable was declared outside of the `beforeEach`, otherwise it would be outside of our specs' scope.
 
 The same way we tested the request, we can test the handling of the response. Let's suppose `myFunctionThatMakesRequests` takes two arguments, a callback for when the request succeeds and one for when the request fails. We can then create a *spy* and make sure the right function is being called.
@@ -173,6 +178,7 @@ Unfortunately, for now Jasmine Ajax only intercepts requests made by the `XMLHtt
 What we will do is to use a [polyfill](https://remysharp.com/2010/10/08/what-is-a-polyfill) that recreates the `fetch` function with xhr. You can install Github's fetch polyfill in node with `npm install whatwg-fetch --save`. Polyfills, however, only use their code if the native implementation is not available. So, for our trick to work we have to get rid of the native fetch before running the polyfill.
 
 The result will look like this:
+
 ``` javascript
 window.fetch = undefined;
 require('whatwg-fetch')

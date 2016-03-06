@@ -8,6 +8,7 @@ Ionic provides a very nice system for you to track the usage of your app with th
 ---
 
 **TL;DR**
+
 ``` javascript
 	$ionicAnalytics.logger._silence  = true;
 ```
