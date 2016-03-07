@@ -6,31 +6,6 @@ title: Intercepting HTTP requests in tests with Jasmine
 Forget about setting up test servers for unit testing. Give a custom response to
 any HTTP request in your code with **jasmine-ajax**.
 
----
-**TL;DR**
-
-- Capture and send custom responses to XHR requests with:
-
-``` javascript
-require('jasmine-ajax')
-jasmine.Ajax.install();
-//Call the request maker function
-myFunctionThatMakesRequests();
-//Give a custom answer to my function's request.
-request = jasmine.Ajax.requests.mostRecent();
-request.respondWith({ status: 200, responseText: "Oh yeah!" });
-```
-
-- Use a `fetch` polyfill that uses xhr to intercept requests from the fetch API like this:
-
-``` javascript
-window.fetch = undefined;
-require('whatwg-fetch')
-require('jasmine-ajax')
-// Do tests
-...
-```
----
 
 ## Why do it?
 Unit testing is very important in making sure that the code we produce is really reliable and alerting us when code changes break something. However, we must admit that testing code with HTTP requests is not the most straight forward thing in
@@ -192,3 +167,29 @@ require('jasmine-ajax')
 ```
 
 With Jasmine Ajax we can now save those precious server preparation or mock writing minutes and just prepare another coffee. ☕
+
+---
+**TL;DR**
+
+- Capture and send custom responses to XHR requests with:
+
+``` javascript
+require('jasmine-ajax')
+jasmine.Ajax.install();
+//Call the request maker function
+myFunctionThatMakesRequests();
+//Give a custom answer to my function's request.
+request = jasmine.Ajax.requests.mostRecent();
+request.respondWith({ status: 200, responseText: "Oh yeah!" });
+```
+
+- Use a `fetch` polyfill that uses xhr to intercept requests from the fetch API like this:
+
+``` javascript
+window.fetch = undefined;
+require('whatwg-fetch')
+require('jasmine-ajax')
+// Do tests
+...
+```
+---

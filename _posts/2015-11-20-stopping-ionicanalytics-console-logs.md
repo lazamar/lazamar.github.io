@@ -5,15 +5,7 @@ title: Stopping $ionicAnalytics Annoying Console Logs
 
 Ionic provides a very nice system for you to track the usage of your app with the $ionicAnalytics plugin. But if you are reading this you probably already know that, so let's get to the heart of the matter.
 
----
 
-**TL;DR**
-
-``` javascript
-	$ionicAnalytics.logger._silence  = true;
-```
-
----
 
 
 Ionic provides a very nice system for you to track the usage of your app with the $ionicAnalytics plugin. But if you are reading this you probably already know that, so let's get to the heart of the matter.
@@ -72,3 +64,13 @@ This seems to be exactly what we are looking for. But this logger stuff seems to
 ```
 
 Tadah! It works. Now we have a nice and clean console and a sourcedigger badge.
+
+---
+
+**TL;DR**
+
+``` javascript
+	$ionicAnalytics.logger._silence  = true;
+```
+
+---

@@ -6,24 +6,7 @@ title: Device Specific Fonts in Ionic
 Building apps that have appropriate looks on iPhone and Android is a breeze with Ionic.
 But sometimes we need more than `.platform-android` and `.platform-ios`. We need device-specific css files.
 
----
-**TL;DR**
 
-Add This to your `index.html` right after your Ionic css `link` tag.
-
-``` javascript
-<script>
-    if (/Android/i.test(navigator.userAgent)) { // Check if Android
-        document.write('<link href="css/android.min.css" rel="stylesheet">');
-    } else if(/iPad|iPhone|iPod/.test(navigator.userAgent)){ //Check if iPhone
-        document.write('<link href="css/ios.min.css" rel="stylesheet">');
-    } else { //If it is neither then it is a Windows Phone.
-        document.write('<link href="css/windows-phone.min.css" rel="stylesheet">');
-    };
-</script>
-```
-
----
 
 The best thing about having different css files is dealing with icon fonts.
 You can declare in your whole app that icons use the font `myIconFont` and depending on the device you choose whether to point `myIconFont` to `iosIcons.woff` or to `androidIcons.woff`.
@@ -79,3 +62,22 @@ Let's add that inside the `<head>` of our `index.html`. This is how it looks lik
 
 
  And there you go. You can do a lot more stuff than just adding different fonts. The sky is the limit.
+
+ ---
+ **TL;DR**
+
+ Add This to your `index.html` right after your Ionic css `link` tag.
+
+ ``` javascript
+ <script>
+     if (/Android/i.test(navigator.userAgent)) { // Check if Android
+         document.write('<link href="css/android.min.css" rel="stylesheet">');
+     } else if(/iPad|iPhone|iPod/.test(navigator.userAgent)){ //Check if iPhone
+         document.write('<link href="css/ios.min.css" rel="stylesheet">');
+     } else { //If it is neither then it is a Windows Phone.
+         document.write('<link href="css/windows-phone.min.css" rel="stylesheet">');
+     };
+ </script>
+ ```
+
+ ---
