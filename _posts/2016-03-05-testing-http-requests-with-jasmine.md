@@ -22,6 +22,8 @@ request.respondWith({ status: 200, responseText: "Oh yeah!" });
 ```
 
 - Use a `fetch` polyfill that uses xhr to intercept requests from the fetch API like this:
+
+``` javascript
 window.fetch = undefined;
 require('whatwg-fetch')
 require('jasmine-ajax')
@@ -178,6 +180,7 @@ Unfortunately, for now Jasmine Ajax only intercepts requests made by the `XMLHtt
 What we will do is to use a [polyfill](https://remysharp.com/2010/10/08/what-is-a-polyfill) that recreates the `fetch` function with xhr. You can install Github's fetch polyfill in node with `npm install whatwg-fetch --save`. Polyfills, however, only use their code if the native implementation is not available. So, for our trick to work we have to get rid of the native fetch before running the polyfill.
 
 The result will look like this:
+
 
 ``` javascript
 window.fetch = undefined;
