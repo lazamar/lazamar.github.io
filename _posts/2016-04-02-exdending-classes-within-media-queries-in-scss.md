@@ -1,6 +1,6 @@
 ---
 layout: post
-title: SCSS: extending classes within media queries
+title: SCSS - Extending Classes Within Media Queries
 ---
 If you have used SASS for some time you will know that if you are within a
 media query and try to extend a class that is outside of the media query
@@ -11,7 +11,7 @@ you will get an error. Let's find a way around it.
 
 If you do this:
 
-```
+``` scss
 .small-btn {
   padding: 5px;
   &:hover {
@@ -51,7 +51,7 @@ query will import the `@mixin` functionality.
 
 Here is how it could look like:
 
-```
+``` scss
 @mixin small-btn-mixin() {
   padding: 5px;
   &:hover {
@@ -88,7 +88,7 @@ to having to repeat code.
 
  - Instead of extending, put the code you want to reproduce inside a *`@mixin`*.
 
- ``` 
+ ``` scss
  @mixin small-btn-mixin() {
    padding: 5px;
    &:hover {
