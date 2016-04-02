@@ -86,9 +86,10 @@ to having to repeat code.
 ---
 **TL;DR**
 
- - Instead of extending, put the code you want to reproduce inside a *`@mixin`*.
+- Instead of extending, put the code you want to reproduce inside a *`@mixin`*.
 
  ```
+
  @mixin small-btn-mixin() {
    padding: 5px;
    &:hover {
@@ -102,6 +103,7 @@ to having to repeat code.
      @include small-btn-mixin();
    }
  }
+
  ```
 
 ---
