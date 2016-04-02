@@ -7,10 +7,11 @@ media query and try to extend a class that is outside of the media query
 you will get an error. Let's find a way around it.
 
 
+## The problem
 
 If you do this:
 
-``` scss
+```
 .small-btn {
   padding: 5px;
   &:hover {
@@ -39,6 +40,7 @@ some really interesting things in responsive websites. To go around this
 limitation we must find a way to include a collection of rules and sub-rules
 within a class inside a media query.
 
+## A way around it
 
 The answer we are looking for is a `@mixin`. With a `@mixin` we can import
 all the rules that we want very easily. What we would have to do is to put
@@ -49,7 +51,7 @@ query will import the `@mixin` functionality.
 
 Here is how it could look like:
 
-``` scss
+```
 @mixin small-btn-mixin() {
   padding: 5px;
   &:hover {
@@ -86,7 +88,7 @@ to having to repeat code.
 
  - Instead of extending, put the code you want to reproduce inside a *`@mixin`*.
 
- ``` scss
+ ``` 
  @mixin small-btn-mixin() {
    padding: 5px;
    &:hover {
