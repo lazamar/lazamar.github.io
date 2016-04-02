@@ -86,7 +86,7 @@ to having to repeat code.
 ---
 **TL;DR**
 
-- Instead of extending, put the code you want to reproduce inside a *`@mixin`*.
+- Instead of extending, put the code you want to reproduce inside a `@mixin`.
 
 ``` scss
  @mixin small-btn-mixin() {
@@ -102,6 +102,6 @@ to having to repeat code.
      @include small-btn-mixin();
    }
  }
- ```
+```
 
 ---
