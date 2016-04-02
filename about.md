@@ -19,6 +19,10 @@ I mostly write about easy things, like programming and algorithms, but sometimes
 
 Here are a couple of cool projects I am working on; contributions are very welcome.
 
+## [Home-CI](https://github.com/lazamar/home-ci)
+
+A home-made continuous integration system. A bare-bones application to test your
+private repositories in your own server when you push to github.
 
 ## [Markdown Reader](https://github.com/lazamar/Markdown-Reader)
 
