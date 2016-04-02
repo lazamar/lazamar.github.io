@@ -88,8 +88,7 @@ to having to repeat code.
 
 - Instead of extending, put the code you want to reproduce inside a *`@mixin`*.
 
- ```
-
+``` scss
  @mixin small-btn-mixin() {
    padding: 5px;
    &:hover {
@@ -103,7 +102,6 @@ to having to repeat code.
      @include small-btn-mixin();
    }
  }
-
  ```
 
 ---
