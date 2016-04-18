@@ -1,9 +1,7 @@
 ---
 layout: post
-title: Rollup.js Quick Start with Grunt, Gulp and the plain JavaScript API
+title: Setting up Rollup.js in Grunt, Gulp and the JS API
 ---
-
-# Setting up Rollup.js in Grunt, Gulp and the JS API
 
 Rollup.js is a nice bundler that gets all of your dependencies and packs them
 together with our code. It works like a charm, but the documentation on how to
