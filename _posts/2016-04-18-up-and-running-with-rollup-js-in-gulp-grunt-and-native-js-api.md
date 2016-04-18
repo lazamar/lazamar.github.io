@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Setting up Rollup.js in Grunt, Gulp and the JS API
+title: Setting up Rollup.js with Babel in Grunt, Gulp and the JS API
 ---
 
 Rollup.js is a nice bundler that gets all of your dependencies and packs them
@@ -14,7 +14,7 @@ will also need to transpile our code form ES6 to ES5. In the examples I am
 using babel to do the transpiling.
 
 We could do the transpiling using Babel's standalone plugins and then later pack
-everything with Rollup.js, but the Rollup documentation say it is better to use Babel's
+everything with Rollup.js, but the Rollup documentation says it is better to use Babel's
 rollup plugin instead, so that is what we will do.
 
 In this post I will show three different ways to use Rollup (with Grunt, with
@@ -39,7 +39,7 @@ You can see all the files and examples for all the methods here // TODO
 
 We will have our output in the `build/` folder.
 
-## Using gulp
+## Using Gulp
 
 To use Rollup.js with Gulp we will need to run the following:
 
@@ -81,7 +81,7 @@ gulp.task('rollup', function () {
 
 That's all we will need. Now we can just run `gulp rollup`.
 
-# Grunt
+# Using Grunt
 
 For Grunt we will need to use run the following:
 
@@ -124,7 +124,7 @@ module.exports = function Gruntfile(grunt) {
 
 That's it. Just run `grunt rollup` and you will see the output in the build folder.
 
-# JavaScript API
+# Using the JavaScript API
 
 Although in my persolnal experience all the methods performed exactly the same,
 the Rollup team advise in favour of using the JavaScript API over the other methods.
