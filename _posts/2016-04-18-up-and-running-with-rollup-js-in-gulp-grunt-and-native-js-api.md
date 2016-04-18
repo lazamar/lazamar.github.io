@@ -35,7 +35,7 @@ For the examples we will have a pretty simple project structure:
 
 ```
 
-You can see all the files and examples for all the methods here // TODO
+You can see all the files and examples for all the methods [here](https://github.com/lazamar/Rollup.js-Quick-Start-Kit).
 
 We will have our output in the `build/` folder.
 
