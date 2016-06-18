@@ -58,4 +58,4 @@ if (verySat) {
 }
 ```
 
-There you go, that's it. It might seem that it is actually more labourious and long to write these variables than to write the condition directly. This might be true, but whatever extra time you spend writing those down will be more than saved at debugging and code-reading time.
+There you go, that's it. It might seem that it is actually more laborious and long to write these variables than to write the condition directly. This might be true, but whatever extra time you spend writing those down will be more than saved at debugging and code-reading time.
