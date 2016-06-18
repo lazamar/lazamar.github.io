@@ -36,7 +36,7 @@ if ((el.boundingBox.top <= click.y &&
     }
 ```
 
-This is a quite long and confusing condition, it would probably be quicker to read a comment about what it is doing than to try to check it out ourselves. Here is where we have the greatest refactoring improvement. We immediately make our code more reliable if we **store our logical conditions in a variable that explains its purpose**. Look:
+This is a quite long and confusing condition, it would probably be quicker to read a comment about what it is doing than to try to check it out ourselves. Here is where we have the greatest refactoring improvement. We immediately make our code more readable if we **store our logical conditions in a variable that explains its purpose**. Look:
 
 ``` javascript
 const clickWithnElXRange = el.boundingBox.left <= click.x && click.x <= el.boundingBox.right;
@@ -47,7 +47,7 @@ if (clickWithinElement) {
 }
 ```
 
-Oh, how beautiful. Now we can understand exactly what is going on without having to think too hard at it. We can spend our hard thinking with more higher level things. You will aldo notice that I rearranged the factors; having them in order from smallest to largest also improves readability.
+Oh, how beautiful. Now we can understand exactly what is going on without having to think too hard at it. We can spend our hard thinking with higher level things. You will also notice that I rearranged the factors; having them in order from smallest to largest also improves readability.
 
 Containing logical operations in a variable is a good idea not only for long comparisons, but even to making the meaning of a single operation clearer.
 
