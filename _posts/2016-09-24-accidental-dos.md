@@ -1,6 +1,6 @@
 ---
 layout: post
-title: My accidental Denial Of Service attack at my company
+title: My accidental Denial Of Service attack
 ---
 
 It was my most effective attack, three companies went down. It was also accidental and with undesired concequences.
