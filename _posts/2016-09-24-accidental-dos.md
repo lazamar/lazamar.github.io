@@ -51,7 +51,7 @@ The fix was really easy. First let's have a minimum delay time
 ``` javascript
     // submit next track around 10 seconds before the tracklist ends.
     // guarantee a minimum time of 10 seconds between submissions. To avoid a DOS attack on our router.
-    const timeToNextSubmission = Math.min(timeToPLaylistEnd - 10000, 10000); // in ms
+    const timeToNextSubmission = Math.max(timeToPLaylistEnd - 10000, 10000); // in ms
 
     // Schedule next update
     setTimeout(() => this.submitToSpotify(), timeToNextSubmission);
