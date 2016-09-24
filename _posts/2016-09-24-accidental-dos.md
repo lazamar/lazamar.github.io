@@ -3,7 +3,7 @@ layout: post
 title: My accidental Denial Of Service attack
 ---
 
-It was my most effective attack, three companies went down. It was also accidental and with undesired concequences.
+It was my most effective attack, three companies went down. It was also accidental and with undesired consequences.
 
 At work we have two very distinct groups: the pop-lovers and the metal-heads. As you might expect, metal-heads are not very fond of Rihanna, and neither are pop-lovers very appreciative of Guns & Roses. To end our frequent discussions about which station should the radio on, we decided to build a widget where everyone could submit whatever songs they liked and they would be automatically arranged in turns and played from Spotify. Fair and easy.
 
@@ -21,7 +21,7 @@ So far so good.
 
 We however, began to have this internet dropping problem every Friday, which was a great pain as people in the office just couldn't do their jobs without internet. Three medium enterprises that share the same office space completely on hold. We called the internet provider several times. We complained. We asked if other people in the building were having the same problems (and they were not). Nothing could ease our distress. We then began to wonder whether there was anything interfering with our connection. Maybe some other company nearby performed a backup every Friday. Maybe there are engineering works that are only performed on Fridays. Anything you could think of that could possibly happen on a Friday.
 
-It was then that [Chris](https://twitter.com/lown_coco) began to speculate a correlation between the internet dropping and our jolly innocent songs widget. He noted that it always happened when the widget was on. I, obviously, immediately dismissed the conjecture, as I wrote the widget and server myself and was sure it did nothing more than sending some songs to Spotify with a single request every 15 minutes or so. This alone could never ever bring down the internet of an entire office.
+It was then that [Chris](https://twitter.com/lown_coco) began to speculate about a correlation between the internet dropping and our jolly innocent songs widget. He noted that it always happened when the widget was on. I, obviously, immediately dismissed the conjecture, as I wrote the widget and server myself and was sure it did nothing more than sending some songs to Spotify with a single request every 15 minutes or so. This alone could never ever bring down the internet of an entire office.
 
 It was right there, my friends, at the apex of conviction that my knowledge blinded me and as a skilled magician, pulled the tablecloth from underneath my porcelain cup. Because I could see absolutely no relation between my script and an internet drop, I dismissed Chris' theory completely. Many times. Mind you, it was not one day, but for many weeks.
 
