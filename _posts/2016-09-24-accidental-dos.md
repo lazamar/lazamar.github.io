@@ -1,6 +1,6 @@
 ---
 layout: post
-title: My acidental Denial Of Service attack at my company
+title: My accidental Denial Of Service attack at my company
 ---
 
 So, at work we have two very distinct groups: the pop-lovers and the metal-heads. As you might expect, metal-heads are not very fond of Rihanna, and neither are pop-lovers very appreciative of Guns & Roses. We, therefore had frequent discussions about which station should be on at the radio, which is always on.
