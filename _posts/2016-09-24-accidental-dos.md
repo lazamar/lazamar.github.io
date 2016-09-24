@@ -61,6 +61,7 @@ The fix was really easy. First let's have a minimum delay time
 And then let's make sure to refresh the OAuth token whenever we have this issue again. That's it.
 
 Many lessons were learned here.
+
   - First, no piece of code is above suspicion. Even when the consequences seem way out of proportion, never refrain from investigating that inconspicuous piece of code over there.
 
   - Second, keep ***Denial Of Service*** in mind. When writing programs that make ***http*** requests make sure to never allow requests to be continually made by placing explicit guards against it, like having a minimum delay time.
