@@ -30,6 +30,8 @@ Until today afternoon arrived. The internet was down, the music was off, no one 
 I could not believe it! How comes? What on earth was happening over there? It demanded immediate investigation.
 
 Actually, I did not need to evaluate the code to uncover the insidious bug. A mere moment of serious consideration of the issue revealed the culprit. You can witness it in action right here:
+
+
 ``` javascript
     // submit next track around 10 seconds before the tracklist ends.
     const timeToNextSubmission = timeToPLaylistEnd - 10000; // in ms
@@ -38,11 +40,14 @@ Actually, I did not need to evaluate the code to uncover the insidious bug. A me
     setTimeout(() => this.submitToSpotify(), timeToNextSubmission);
 ```
 
+
 As you can see, more songs will be submitted to Spofity 10 seconds before the currently playing playlist reach its end. That doesn't sound so bad, as every submission would add some 15 minutes of songs to the playlist, scheduling the next submission to around 14 minutes and 50 seconds in the future. But what happens if the submission fails? How much time will it take for the playlist to end? Well, it will take less than 10 seconds, so let's submit stuff now! But what if nothing was added yet? Let's submit it again right now!
 
 And here you have it. The very fast node server was sending thousands and thousands of requests per second, making the router simply overwhelmed and unable to cope with anything else. My very innocent script had turned evil and was performing a [**D**enial **O**f **S**ervice](https://en.wikipedia.org/wiki/Denial-of-service_attack) attack on my company's router, blocking other computers from accessing the internet and burning a few pounds in man-hours from my company.
 
 The fix was really easy. First let's have a minimum delay time
+
+
 ``` javascript
     // submit next track around 10 seconds before the tracklist ends.
     // guarantee a minimum time of 10 seconds between submissions. To avoid a DOS attack on our router.
@@ -52,10 +57,14 @@ The fix was really easy. First let's have a minimum delay time
     setTimeout(() => this.submitToSpotify(), timeToNextSubmission);
 ```
 
+
 And then let's make sure to refresh the OAuth token whenever we have this issue again. That's it.
 
 Many lessons were learned here.
- - First, no piece of code is above suspicion. Even when the consequences seem way out of proportion, never refrain from investigating that inconspicuous piece of code over there.
- - Second, keep ***Denial Of Service*** in mind. When writing programs that make ***http*** requests make sure to never allow requests to be continually made by placing explicit guards against it, like having a minimum delay time.
- - Third, never dismiss a logically sound proposal from a non-developer source just because it seems unlikely. The proposal, however improbable, may still point towards a real flaw.
- - Lastly, in computing there are hardly every coincidences. Always be suspicious.
+  - First, no piece of code is above suspicion. Even when the consequences seem way out of proportion, never refrain from investigating that inconspicuous piece of code over there.
+
+  - Second, keep ***Denial Of Service*** in mind. When writing programs that make ***http*** requests make sure to never allow requests to be continually made by placing explicit guards against it, like having a minimum delay time.
+
+  - Third, never dismiss a logically sound proposal from a non-developer source just because it seems unlikely. The proposal, however improbable, may still point towards a real flaw.
+
+  - Lastly, in computing there are hardly every coincidences. Always be suspicious.
