@@ -7,13 +7,13 @@ Elm doesn't have a `join` method in it's `Maybe` type, so how do we join `Maybe`
 
 You need to join a `Maybe` when you have a `Maybe` inside another. Something like this:
 
-``` Elm
+```
 Just ( Just 2 )
 ```
 
 In Elm we can use the helpful `[withDefault](http://package.elm-lang.org/packages/elm-lang/core/latest/Maybe#withDefault)`, which is meant to peal the `Maybe` onion, removing its encapsulating layer. With it we can easily do a join.
 
-``` Elm
+```
 
 Maybe.withDefault Nothing  (Just (Just 2) )
 
@@ -25,7 +25,7 @@ We can also use the sophisticated `[andThen](http://package.elm-lang.org/package
 
 Because our inner value is already a `Maybe`, we can just pass the `identity` function to it and voilà!
 
-``` Elm
+```
 
 (Just ( Just 2 ) ) `Maybe.andThen` indentity
 
@@ -36,7 +36,7 @@ Because our inner value is already a `Maybe`, we can just pass the `identity` fu
 
 Here is an *[SSCCE](http://sscce.org/)* example to try at [elm-lang.org/try](elm-lang.org/try)
 
-``` Elm
+```
 import Html exposing (text, div)
 
 join : Maybe (Maybe a) -> Maybe a
