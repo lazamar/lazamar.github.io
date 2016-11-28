@@ -24,9 +24,9 @@ Here are a couple of cool projects I am working on; contributions are very welco
 A home-made continuous integration system. A bare-bones application to test your
 private repositories in your own server when you push to github.
 
-## [Markdown Reader](https://github.com/lazamar/Markdown-Reader)
+## [Silver Magpie](https://lazamar.co.uk/silver-magpie/)
 
-A simple, lightweight, open source desktop application to open Markdown files for Windows, Mac and Linux. Markdown editing is coming soon.
+A clean and beautiful Twitter client for Google Chrome written entirely in [Elm](http://elm-lang.org/)
 
 ## [Archimedes](https://github.com/lazamar/Archimedes)
 
