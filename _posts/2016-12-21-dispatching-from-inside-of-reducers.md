@@ -45,7 +45,8 @@ This adds an `asyncDispatch` property to all action objects, which will call `st
 
 Here is an example of how easy and simple asynchronous code becomes.
 
-``` JavaScript
+
+``` javascript
 function reducer(state, action) {
   switch (action.type) {
     case "fetch-start":
