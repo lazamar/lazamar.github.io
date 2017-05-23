@@ -21,7 +21,7 @@ So I set out to find a nicer way to get my Node.js JavaScript code to interact s
 
 After spending some time going through the work of all of those who came before me, I considered the two best methods to be [https://github.com/mbylstra/call-elm-functions-from-js-dont-do-this](https://github.com/mbylstra/call-elm-functions-from-js-dont-do-this) and [https://github.com/eeue56/take-home](https://github.com/eeue56/take-home). Both seem to have this line as their secret sauce:
 
-```
+``` elm
 Elm.worker(Elm.MyModule)
 ```
 
@@ -38,7 +38,7 @@ Here is the drill. You can pass anything to a function in a Native module. This 
 
 Let's look at the code that will make this work. I decided to call my native module *Transformer*, so it will live under `Native/Transformer.js`. Remember to add `    "native-modules": true` to your `elm-package.json` . Here it is
 
-```
+``` javascript
 const _user$project$Native_Transformer = (function() {
     return {
         toJsFunction: fun => {
@@ -58,9 +58,10 @@ const _user$project$Native_Transformer = (function() {
     };
 })();
 ```
+
 In my Elm code I created a typed wrapper for it and use it like this:
 
-```
+``` elm
 import Native.Transformer
 
 -- The type is showing a function of arity 1, but toJsFunction accepts
@@ -97,7 +98,7 @@ FrontEnd.elm                      BackEnd.elm
 	 - One for our JS to listen to. This one will receive an object containing all the functions we want to expose.
 	 - One for our JS to call. Once we are listening on the other port, this will trigger Elm to call our listener function.
 
-```
+``` elm
 port expose : PublicAPI -> Cmd msg
 
 port requestExposition : (Json.Decode.Value -> msg) -> Sub msg
@@ -105,7 +106,7 @@ port requestExposition : (Json.Decode.Value -> msg) -> Sub msg
 
 That's it. We can now get our functions through these ports. Here is how we can use it in Node.
 
-```
+``` javascript
 const jsdom = require("jsdom");
 
 // Elm needs some DOM to operate on, so create a fake one.
