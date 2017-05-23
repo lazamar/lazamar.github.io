@@ -3,12 +3,21 @@ layout: post
 title: Calling Elm functions synchronously from JavaScript
 ---
 
+As my Elm codebase grows, I start to see more and more places where it would be great to share some business logic between my front-end Elm and my back-end Node. This is how I got my Node code to call my Elm functions synchronously.
 
-Disclamer: This is a naughty hack that uses the purposely undocumented `Native` api to trick the Elm runtime and may not continue to work in the future.  Check [this](https://github.com/eeue56/take-home/wiki/Writing-your-first-impure-Elm-Native-module) and [this](https://github.com/eeue56/take-home/wiki/Writing-Native#should-i-be-writing-native) for the concequences of using Native modules.
 
-As my Elm codebase grows, I start to see more and more places where it would be great to share some business logic between my front-end Elm and my back-end Node.
+---
+**TL;DR**
 
-I could use ports for that but they are inconvenient here for two main reasons:
+- Use a naughty *Native* module to turn your Elm functions into `Json.Decode.Value`s and send them through a port.
+- Check [https://github.com/lazamar/elm-synchronous](https://github.com/lazamar/elm-synchronous) for an [sscce](http://sscce.org/) example.  
+
+---
+
+**Warning**: This is a naughty hack that uses the purposely undocumented `Native` api to trick the Elm runtime and may not continue to work in the future.  Check [this](https://github.com/eeue56/take-home/wiki/Writing-your-first-impure-Elm-Native-module) and [this](https://github.com/eeue56/take-home/wiki/Writing-Native#should-i-be-writing-native) for the concequences of using Native modules.
+
+
+I could use ports for the Node-Elm connection but they are inconvenient here for two main reasons:
 
  - Ports are always asynchronous. The logic I want to implement is pure so synchronicity would make much more sense.
 
@@ -32,11 +41,12 @@ Apparently this creates an *Elm runtime* or something of the kind. Anyway. Lo an
 
 I remember it vividly. I was standing on the edge of my toilet hanging a clock, the porcelain was wet, I slipped, hit my head on the sink, and when I came to I had a revelation! A vision! A picture in my head! A picture of this! This is what makes synchronous Elm function invocation possible: The `Json.Decode.Value` type.
 
-If we could pass our functions through a port our problems would be solved. We just listen to that port once in our JS and when it gives us our Elm function we store a reference to it and throw the port away! Now that we have a reference to the real function we can use it synchronously without ever needing to care for that port again. But life is not that easy and you can't pass functions through ports. It's illegal.
+If we could pass our functions through a port our problems would be solved. We would just listen to that port once in our JS and when it gives us our Elm function we would store a reference to it and throw the port away! Now that we have a reference to the real function we can use it synchronously without ever needing to care for that port again! But life is not that easy and you can't pass functions through ports. It's illegal.
 
 Here is the drill. You can pass anything to a function in a Native module. This means we can pass functions to them too. And when we return something from our Native module, if we say it is a `Json.Decode.Value` Elm won't try to check what's inside of it. This means we can now pass this `Json.Decode.Value` through our port without the runtime noticing! We have just created a small function laundry business!
 
-Let's look at the code that will make this work. I decided to call my native module *Transformer*, so it will live under `Native/Transformer.js`. Remember to add `    "native-modules": true` to your `elm-package.json` . Here it is
+Let's look at the code that will make this work. I decided to call my native module *Transformer*, so it will live under `Native/Transformer.js`. Remember to add `"native-modules": true` to your `elm-package.json` . Here it is
+
 
 ``` javascript
 const _user$project$Native_Transformer = (function() {
@@ -59,7 +69,9 @@ const _user$project$Native_Transformer = (function() {
 })();
 ```
 
+
 In my Elm code I created a typed wrapper for it and use it like this:
+
 
 ``` haskell
 import Native.Transformer
@@ -84,9 +96,9 @@ jsSum = toJsFunction sum
 
 ## Getting it to work
 
-You can see the full program [https://github.com/lazamar/elm-synchronous](https://github.com/lazamar/elm-synchronous)
+You can see the full program at [https://github.com/lazamar/elm-synchronous](https://github.com/lazamar/elm-synchronous)
 
-Here is what we will do. First we will create a module whose sole purpose is to expose our desired Elm functions. Our front-end Elm module probably does http requests, handles lots of Ui, state changes, etc. We don't need any of that overhead. Here is our brand new dependency tree.
+Here is what we will do. First we will create a module whose sole purpose is to expose our desired Elm functions. Our front-end Elm module probably does http requests, handles lots of Ui, state changes, etc. We don't need any of that overhead. We keep our functions in a module of their own so we can import them from the front-end and from the back-end.
 
 ```
       ┌───────> MyFunctions.elm <──────┐
@@ -94,9 +106,12 @@ FrontEnd.elm                      BackEnd.elm
 
 ```
 
- Our BackEnd module will have two ports:
-	 - One for our JS to listen to. This one will receive an object containing all the functions we want to expose.
-	 - One for our JS to call. Once we are listening on the other port, this will trigger Elm to call our listener function.
+ Our module for the back-end will have two ports:
+
+ - One for our JS to listen to. This one will receive an object containing all the functions we want to expose.
+
+ - One for our JS to call. Once we are listening on the other port, this will trigger Elm to call our listener function.
+
 
 ``` haskell
 port expose : PublicAPI -> Cmd msg
@@ -104,7 +119,9 @@ port expose : PublicAPI -> Cmd msg
 port requestExposition : (Json.Decode.Value -> msg) -> Sub msg
 ```
 
+
 That's it. We can now get our functions through these ports. Here is how we can use it in Node.
+
 
 ``` javascript
 const jsdom = require("jsdom");
@@ -150,16 +167,8 @@ loadAPI()
 
 ## Some considerations
 
-This method is not all that hacky. The only non-standard feature used was the Native API and it is widely used, so it's unlikely that it will stop being supported. It will obviously not work when Elm starts compiling to machine code or Web Assembly or something else.
+This method is not all that hacky. The only non-standard feature required was the Native API and it is widely used by the community, so it's unlikely that it will stop being supported. It will obviously not work when Elm starts compiling to machine code or Web Assembly or something else.
 
 Just like ports, you have to be careful with the values you have going in and out from these functions. Elm will not check their types at invocation time, so you can break you program if you pass something unexpected to it, just like pure JavaScript. The recommended way to handle that is to use encoders and decoders for these functions. Create a wrapper around them to decode any value sent from JavaScript and encode it back to a JavaScript value before it returns. Because decoding can fail, your functions will have to return something like a `Result` or `Maybe` type. You can use a monad library like [ramda-fantasy](https://github.com/ramda/ramda-fantasy) (my fave) to wrap these values in JavaScript.
 
 If you try this and find some pitfalls, be it with the Elm runtime in Node or with deceiving values make sure to mention so I can add it to the post.
-
----
-**TL;DR**
-
-- Use a naughty *Native* module to turn your Elm functions into `Json.Decode.Value`s and send them through a port.
-- Check https://github.com/lazamar/elm-synchronous for an [sscce](http://sscce.org/) example.  
-
----
