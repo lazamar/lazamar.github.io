@@ -8,11 +8,14 @@ Disclamer: This is a naughty hack that uses the purposely undocumented `Native` 
 
 As my Elm codebase grows, I start to see more and more places where it would be great to share some business logic between my front-end Elm and my back-end Node.
 
-If my logic is written in JavaScript, I can get Elm to access that without major problems using ports. But what I would really like is to have my Node server access some logic written in Elm and ports can be inconvenient here for two main reasons:
-    1 - Ports are always asynchronous. The logic I want to implement is pure so synchronicity would make much more sense.
-    2 - All responses go through the same hole. I would have to add some identifier as a parameter when calling my input port and look for that identifier in all responses from my output port.
+I could use ports for that but they are inconvenient here for two main reasons:
 
-For these reasons I set out to find a nicer way to get our back-end JavaScript code to interact synchronously with some Elm module of mine.
+ - Ports are always asynchronous. The logic I want to implement is pure so synchronicity would make much more sense.
+
+
+ - All responses go through the same hole. I would have to add some identifier as a parameter when calling my input port and look for that identifier in all responses from my output port.
+
+So I set out to find a nicer way to get my Node.js JavaScript code to interact synchronously with some Elm module of mine.
 
 ## Existing solutions
 
@@ -21,14 +24,9 @@ After spending some time going through the work of all of those who came before 
 ```
 Elm.worker(Elm.MyModule)
 ```
+
 Apparently this creates an *Elm runtime* or something of the kind. Anyway. Lo and behold, this doesn't work anymore. Surprise motherfocker!
 
-## Failed attempts
-
-Unable to find a working solution, I rolled up my sleeves and went on to thread a new path in this uncharted territory. Fast forward a few hours, I was giving up. Here is a list of the things I tried:
-    - Sneeking into the runtime going up from `arguments.callee.caller`. Not allowed in scrict mode.
-    - Making a Native module that would subscribe to some global variable. Bad for many reasons, including use of global variables, but ultimately fruitless because your JS in Native modules can only be invoked by Elm, not the other way around.
-    - Post-compiling the Elm output to expose private variables. That worked, but it's a pain, it's error prone and it adds complexity to the build process. I wouldn't want to be doing that.
 
 ## A new hope
 
