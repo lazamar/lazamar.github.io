@@ -6,15 +6,24 @@ title: Calling Elm functions synchronously from JavaScript
 As my Elm codebase grows, I start to see more and more places where it would be great to share some business logic between my front-end Elm and my back-end Node. This is how I got my Node code to call my Elm functions synchronously.
 
 
+&nbsp;
+
 ---
-**TL;DR**
+### TL;DR
 
 - Use a naughty *Native* module to turn your Elm functions into `Json.Decode.Value`s and send them through a port.
 - Check [https://github.com/lazamar/elm-synchronous](https://github.com/lazamar/elm-synchronous) for an [sscce](http://sscce.org/) example.  
 
 ---
 
+
+&nbsp;
+
+
 **Warning**: This is a naughty hack that uses the purposely undocumented `Native` api to trick the Elm runtime and may not continue to work in the future.  Check [this](https://github.com/eeue56/take-home/wiki/Writing-your-first-impure-Elm-Native-module) and [this](https://github.com/eeue56/take-home/wiki/Writing-Native#should-i-be-writing-native) for the concequences of using Native modules.
+
+
+&nbsp;
 
 
 I could use ports for the Node-Elm connection but they are inconvenient here for two main reasons:
