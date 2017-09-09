@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Faster and safer Haskell: benchmarks for the accumulating parameter
+title: Faster and safer Haskell - benchmarks for the accumulating parameter
 ---
 
 Haskell's lazyness can cause problems with recursive functions if not handled properly. In some cases this can be dealt with using an [accumulating parameter](https://wiki.haskell.org/Performance/Accumulating_parameter). Haskell's wiki page on the subject does a great job in explaining that. Here I register some benchmarks on the wiki's examples so we can see how much that matters.   
