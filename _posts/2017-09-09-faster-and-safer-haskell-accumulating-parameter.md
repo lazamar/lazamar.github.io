@@ -67,6 +67,8 @@ I ran some micro-benchmarks on these functions to see how they did in smaller ta
 
 ![Benchmarks](../images/2017-09-09-benchmarks.png)
 
+Execution count: Completely lazy ≈ 800x. Tail recursive ≈ 1700x. Strict + tail recursive ≈ 1700x.
+
 We can see that just by using tail recursion we cut our function’s running time in half. Removing thunk allocation in our accumulator added a slight performance improvement, but nothing too significant.
 
 These speed rating, however, matter very little if our program will crash. The last implementation is not only the **fastest**, it is also the the **safest** and **most efficient**.   
