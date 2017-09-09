@@ -55,14 +55,14 @@ len []  acc    = acc
 len (_:xs) acc = len xs $! (1 + acc)
 ```
 
-With this implementation our function runs until the end using a steady 100Mb of memory throughout.
+With this improvement our function runs until the end using a steady 100Mb of memory throughout.
 
 ![Strict + tail recursive implementation](../images/2017-09-09-task-manager-strict.png)
 
 
 ## Speed comparison
 
-I ran some micro-benchmarks on these functions to see how they did in smaller tasks. The following graph shows their performance when calculating the length of a list of size 100000 (one hundred thousand). I used the awesome [Criterion](https://hackage.haskell.org/package/criterion) package to run the benchmarks.
+I ran some micro-benchmarks on these functions to see how they did in smaller tasks. The following graph shows their performance when calculating the length of a list of size *100000 (one hundred thousand)*. I used the awesome [Criterion](https://hackage.haskell.org/package/criterion) package to run the benchmarks.
 
 
 ![Benchmarks](../images/2017-09-09-benchmarks.png)
