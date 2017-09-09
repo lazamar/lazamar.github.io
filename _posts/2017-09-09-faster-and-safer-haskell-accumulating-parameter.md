@@ -3,17 +3,15 @@ layout: post
 title: Faster and safer Haskell - benchmarks for the accumulating parameter
 ---
 
-Haskell's lazyness can cause problems with recursive functions if not handled properly. In some cases this can be dealt with using an [accumulating parameter](https://wiki.haskell.org/Performance/Accumulating_parameter). Haskell's wiki page on the subject does a great job in explaining that. Here I register some benchmarks on the wiki's examples so we can see how much that matters.   
+Haskell's lazyness can cause problems with recursive functions if they are not handled properly. In some cases this can be dealt with by using an [accumulating parameter](https://wiki.haskell.org/Performance/Accumulating_parameter). Haskell's [wiki page](https://wiki.haskell.org/Performance/Accumulating_parameter) on the subject does a great job in explaining how that works. Here I register some benchmarks on the wiki's examples so we can see how much that matters.   
 
 
-I won't go into details as to why one implementation performs better than the other as the wiki's article is very clear conscise. I will stick to showing the code and the benchmarks.
+I won't go into details as to why one implementation performs better than the other as the wiki's article is already very clear and conscise. I will stick to showing the code and the benchmarks.
 
 The task in our hands is to calculate the length of a list. To make sure this is working we will print the length of a really long one.
 
 ``` haskell
-
-main = print $ len [1..1000000000] 0 -- 1 Billion
-
+main = print $ len [1..1000000000] -- 1 Billion
 ```
 
 ## Very lazy implementation
@@ -21,11 +19,9 @@ main = print $ len [1..1000000000] 0 -- 1 Billion
 This is our first and very naive implementation.
 
 ``` haskell
-
 len :: [a] -> Int
 len [] = 0
 len (x:xs) = len xs + 1
-
 ```
 
 In this implementation memory usage grew very quickly and we also hit a stack overflow in less than 10 seconds.
@@ -38,11 +34,9 @@ In this implementation we add an accumulator parameter to our function so that w
 
 
 ``` haskell
-
 len :: [a] -> Integer -> Integer
 len []  acc    = acc
 len (_:xs) acc = len xs (1 + acc)
-
 ```
 
 This represents a great progress but the `acc + 1` part still isn't evaluated until the very end, which means we accumulate one billion thunks before the end of the function. Our stack doesn't blow but our memory usage goes through the roof.
@@ -56,11 +50,9 @@ Here is a screenshot of this function's memory usage right before my OS killed i
 For our last trick we use the `$!` operator to force the evaluation of the accumulator addition before our recursive call.
 
 ``` haskell
-
 len :: [a] -> Integer -> Integer
 len []  acc    = acc
 len (_:xs) acc = len xs $! (1 + acc)
-
 ```
 
 With this implementation our function runs until the end using a steady 100Mb of memory throughout.
