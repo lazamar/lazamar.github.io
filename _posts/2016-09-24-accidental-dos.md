@@ -5,9 +5,9 @@ title: My accidental Denial Of Service attack
 
 It was my most effective attack, three companies went down. It was also accidental and with undesired consequences.
 
-At work we have two very distinct groups: the pop-lovers and the metal-heads. As you might expect, metal-heads are not very fond of Rihanna, and neither are pop-lovers very appreciative of Guns & Roses. To end our frequent discussions about which station should the radio on, we decided to build a widget where everyone could submit whatever songs they liked and they would be automatically arranged in turns and played from Spotify. Fair and easy.
+At work we have two very distinct groups: the pop-lovers and the metal-heads. As you might expect, metal-heads are not very fond of Rihanna, and neither are pop-lovers very appreciative of Guns & Roses. To end people's frequent discussions about which station should the radio be on, we decided to build a widget for the company's management system where everyone could submit whatever songs they liked and they would be automatically arranged in turns and played from Spotify. Fair and easy.
 
-I was the one commissioned with the task of building the widget. I built two components. A little server to receive all songs requests, organise them, and add them to a Spotify playlist. And the widget itself, to allow song choosing, reordering, and viewing of how the general playlist was looking like.
+I was the one to develop such widget. I built two components. A little server to receive all song requests, organise them, and add them to a Spotify playlist. And the widget itself, to allow song choosing, reordering, and viewing of how the general playlist. This is how it was looking like.
 
 ![The playlist widget](../images/playlist-widget.png)
 
@@ -31,15 +31,13 @@ I could not believe it! How comes? What on earth was happening over there? It de
 
 Actually, I did not need to evaluate the code to uncover the insidious bug. A mere moment of serious consideration of the issue revealed the culprit. You can witness it in action right here:
 
+```javascript
+// submit next track around 10 seconds before the tracklist ends.
+const timeToNextSubmission = timeToPLaylistEnd - 10000; // in ms
 
-``` javascript
-    // submit next track around 10 seconds before the tracklist ends.
-    const timeToNextSubmission = timeToPLaylistEnd - 10000; // in ms
-
-    // Schedule next update
-    setTimeout(() => this.submitToSpotify(), timeToNextSubmission);
+// Schedule next update
+setTimeout(() => this.submitToSpotify(), timeToNextSubmission);
 ```
-
 
 As you can see, more songs will be submitted to Spofity 10 seconds before the currently playing playlist reach its end. That doesn't sound so bad, as every submission would add some 15 minutes of songs to the playlist, scheduling the next submission to around 14 minutes and 50 seconds in the future. But what happens if the submission fails? How much time will it take for the playlist to end? Well, it will take less than 10 seconds, so let's submit stuff now! But what if nothing was added yet? Let's submit it again right now!
 
@@ -47,25 +45,23 @@ And here you have it. The very fast node server was sending thousands and thousa
 
 The fix was really easy. First let's have a minimum delay time
 
+```javascript
+// submit next track around 10 seconds before the tracklist ends.
+// guarantee a minimum time of 10 seconds between submissions. To avoid a DOS attack on our router.
+const timeToNextSubmission = Math.max(timeToPLaylistEnd - 10000, 10000); // in ms
 
-``` javascript
-    // submit next track around 10 seconds before the tracklist ends.
-    // guarantee a minimum time of 10 seconds between submissions. To avoid a DOS attack on our router.
-    const timeToNextSubmission = Math.max(timeToPLaylistEnd - 10000, 10000); // in ms
-
-    // Schedule next update
-    setTimeout(() => this.submitToSpotify(), timeToNextSubmission);
+// Schedule next update
+setTimeout(() => this.submitToSpotify(), timeToNextSubmission);
 ```
-
 
 And then let's make sure to refresh the OAuth token whenever we have this issue again. That's it.
 
 Many lessons were learned here.
 
-  - First, no piece of code is above suspicion. Even when the consequences seem way out of proportion, never refrain from investigating that inconspicuous piece of code over there.
+* First, no piece of code is above suspicion. Even when the consequences seem way out of proportion, never refrain from investigating that inconspicuous piece of code over there.
 
-  - Second, keep ***Denial Of Service*** in mind. When writing programs that make ***http*** requests make sure to never allow requests to be continually made by placing explicit guards against it, like having a minimum delay time.
+* Second, keep **_Denial Of Service_** in mind. When writing programs that make **_http_** requests make sure to never allow requests to be continually made by placing explicit guards against it, like having a minimum delay time.
 
-  - Third, never dismiss a logically sound proposal from a non-developer source just because it seems unlikely. The proposal, however improbable, may still point towards a real flaw.
+* Third, never dismiss a logically sound proposal from a non-developer source just because it seems unlikely. The proposal, however improbable, may still point towards a real flaw.
 
-  - Lastly, in computing there are hardly every coincidences. Always be suspicious.
+* Lastly, in computing there are hardly every coincidences. Always be suspicious.
