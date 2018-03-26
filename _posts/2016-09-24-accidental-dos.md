@@ -3,7 +3,7 @@ layout: post
 title: My accidental Denial Of Service attack
 ---
 
-It was my most effective attack, three companies went down. It was also accidental and with undesired consequences.
+It was my most effective attack. Three companies went down. It was also accidental and with undesired consequences.
 
 At work we have two very distinct groups: the pop-lovers and the metal-heads. As you might expect, metal-heads are not very fond of Rihanna, and neither are pop-lovers very appreciative of Guns & Roses. To end people's frequent discussions about which station should the radio be on, we decided to build a widget for the company's management system where everyone could submit whatever songs they liked and they would be automatically arranged in turns and played from Spotify. Fair and easy.
 
