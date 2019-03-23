@@ -28,7 +28,6 @@ Quick recapitulation: If the very last thing our function does is to return the 
 This function is tail recursive:
 
 ``` haskell
-
 -- Pauses execution for n loops of the runtime
 sleep n = 
 	if n > 0 then 
@@ -57,7 +56,6 @@ count n =
 If every recursive call is building directly on top of the previous call's work, you make that tail recursive by passing this accumulated computation forward with the recursion. This way you make sure that your last action is the recursive call. More about the accumulating parameter [here](https://wiki.haskell.org/Performance/Accumulating_parameter).
 
 ``` haskell
-
 count n = count_ 0 n
 
 count_ acc n = 
@@ -71,7 +69,6 @@ count_ acc n =
 If we want to reverse a list, for example, we can do it in a stack-safe way by using the accumulating parameter.
 
 ``` haskell
-
 reverse list = reverse_ [] list
 
 reverse_ acc list = 
