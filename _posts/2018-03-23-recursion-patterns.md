@@ -5,6 +5,13 @@ title: Recursion Patterns - Getting rid of stack overflows
 
 When using recursion in functional programming languages you may find yourself overflowing the stack. This post describes how to change our functions to allow them to recurse indefinitely without a stack overflow.
 
+## TL;DR
+
+- The name of the game is *staying tail recursive*
+- Enable tail recursion by passing down computed values
+- Stick to one recursive call at a time by passing down a list of recursions to be done
+
+
 If we reach a stack overflow it is because we are not taking advantage of tail recursion. The fix is: use tail recursion. How to do that, however, is not always very clear. 
 
 ## Tail recursion
@@ -23,7 +30,7 @@ sleep n =
 		n
 ```
 
-This other function, however, is not.
+This other function, however, is not. You can test that by passing it a big number, like `1000000000`. It will immediately throw a stack overflow error.
 
 ``` elm
 -- Just count from n to 0. Returns n.
@@ -34,13 +41,13 @@ count n =
 		n
 ```
 
-**Don't be fooled by infix operators**. They are functions like any other. `a + b` is the same thing as `sum a b`. Therefore the last function call in `count` is not the recursive call, but a call to `sum`, which depends on the result of the recursive call. This disqualifies this funtion for tail call optimisation.
+**Don't be fooled by arithmetic operators**. They are functions like any other. `a + b` is the same as `sum a b`. Therefore the last function call in `count` is not the recursive call, but a call to `sum`, which depends on the result of the recursive call. This disqualifies `count` for tail call optimisation.
 
 ## Making functions tail recursive
 
 ### Accumulating parameter
 
-If every recursive call is building directly on top of the previous call's work, you can pass this accumulated computation forward with the recursion. This way you make sure that your last action is the recursive call. More about the accumulating parameter [here](https://wiki.haskell.org/Performance/Accumulating_parameter).
+If every recursive call is building directly on top of the previous call's work, you make that tail recursive by passing this accumulated computation forward with the recursion. This way you make sure that your last action is the recursive call. More about the accumulating parameter [here](https://wiki.haskell.org/Performance/Accumulating_parameter).
 
 ``` elm
 
@@ -48,6 +55,7 @@ count n = count_ 0 n
 
 count_ acc n = 
 	if n > 0 then 
+		-- Notice how now `count` is the last function we invoke 
 		count_ (acc + 1) (n - 1)
 	else 
 		acc
@@ -120,10 +128,11 @@ joinNodes nodes right  =
 
 ### Multiple recursion calls
 
-Sometimes we need to make more than one recursive call
+Sometimes we need to make more than one recursive call. The fibonacci function is a good example but you will most likely come across that in [divide and conquer algorythms](https://en.wikipedia.org/wiki/Divide-and-conquer_algorithm).
+
+Here is the naive stack-overflowing version. 
 
 ```elm
-
 fib n = 
 	if n == 0 || n == 1 then
 		n 
@@ -131,12 +140,11 @@ fib n =
 		fib (n - 1) + fib (n - 2)
 ```
 
-Tail recursive (bad performance)
+In cases like these we can keep two accumulators, one with things to do, and one with the work we completed. 
 
 ```elm
 fib n = fib_ [] 0 a
 
--- O(2ⁿ) time complexity. See performant version below
 fib_ : List Int -> Int -> Int -> Int
 fib_ todo done a =
   if a == 0 || a == 1 then 
@@ -147,12 +155,17 @@ fib_ todo done a =
       fib (a - 1::todo) done (a - 2) 
 ```
 
+Passing down a representation of computations to be done and one of completed computations is a very powerful concept. 
+It is this idea that enables the creation of stack safe versions of complicated algorithms.
+We can even think of zipper lists and zipper trees as data structures that embody this concept.
+
+You can fix your misbehaving recursive function by passing down to the recursive call everything you calculate.
 
 ## Performance and stack safety
 
 A performant and stack safe version usually combines the accumulating parameter and an insight about what your function in specific is doing. Unfortunately there is no formula for that part.
 
-In the case of fibonacci, the revealing insight is to realise that going up from *0* to *n* is a lot easier than going down from *n* to *0*. We pass two accumulators, one holding the outcome of `fib (next - 2)` and one holding the outcome of `fib (next - 1)`. This implement runs in *O(n)*.
+In the case of fibonacci, the revealing insight is to realise that going up from *0* to *n* is a lot easier than going down from *n* to *0*. We pass two accumulators, one holding the outcome of `fib (next - 2)` and one holding the outcome of `fib (next - 1)`. 
 
 ```elm
 fib n =
@@ -168,6 +181,4 @@ fib_ minusTwo minusOne next target =
         fib_ minusOne (minusOne + minusTwo) (next + 1) target
 ```
 
-
-
-
+Last but not least, don't compare on equal footing the performance of stack-safe and non-stack-safe versions of a function. Rememer that one works and the other can cause problems. 
