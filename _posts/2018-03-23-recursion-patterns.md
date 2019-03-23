@@ -27,7 +27,7 @@ Quick recapitulation: If the very last thing our function does is to return the 
 
 This function is tail recursive:
 
-``` elm
+``` haskell
 
 -- Pauses execution for n loops of the runtime
 sleep n = 
@@ -39,7 +39,7 @@ sleep n =
 
 This other function, however, is not. You can test that by passing it a big number, like `1000000000`. It will immediately throw a stack overflow error.
 
-``` elm
+``` haskell
 -- Just count from n to 0. Returns n.
 count n = 
 	if n > 0 then 
@@ -56,7 +56,7 @@ count n =
 
 If every recursive call is building directly on top of the previous call's work, you make that tail recursive by passing this accumulated computation forward with the recursion. This way you make sure that your last action is the recursive call. More about the accumulating parameter [here](https://wiki.haskell.org/Performance/Accumulating_parameter).
 
-``` elm
+``` haskell
 
 count n = count_ 0 n
 
@@ -70,7 +70,7 @@ count_ acc n =
 
 If we want to reverse a list, for example, we can do it in a stack-safe way by using the accumulating parameter.
 
-``` elm
+``` haskell
 
 reverse list = reverse_ [] list
 
@@ -86,7 +86,7 @@ Now for a trickier example. Imagine we have a binary tree and we want to insert 
 
 Here is the naive non-tail-recursive implementation.
 
-```elm
+```haskell
 type Tree a
 	= Node (Tree a) a (Tree a)
 	| Empty
@@ -110,7 +110,7 @@ We end up having two cases:
 
 Using this trick we can create a stack-safe version of `insertRightmost`.
 
-```elm
+```haskell
 insertRightmost : a -> Tree a -> Tree a
 insertRightmost value tree =
 	insertRightmost_ [] value tree
@@ -139,7 +139,7 @@ Sometimes we need to make more than one recursive call. The fibonacci function i
 
 Here is the naive stack-overflowing version. 
 
-```elm
+```haskell
 fib n = 
 	if n == 0 || n == 1 then
 		n 
@@ -149,7 +149,7 @@ fib n =
 
 In cases like these we can keep two accumulators, one with things to do, and one with the work we completed. 
 
-```elm
+```haskell
 fib n = fib_ [] 0 a
 
 fib_ : List Int -> Int -> Int -> Int
@@ -174,7 +174,7 @@ A performant and stack safe version usually combines the accumulating parameter 
 
 In the case of fibonacci, the revealing insight is to realise that going up from *0* to *n* is a lot easier than going down from *n* to *0*. We pass two accumulators, one holding the outcome of `fib (next - 2)` and one holding the outcome of `fib (next - 1)`. 
 
-``` elm
+``` haskell
 fib n =
     if n == 0 || n == 1 then
         n
