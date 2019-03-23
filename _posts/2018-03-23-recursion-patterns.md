@@ -5,12 +5,19 @@ title: Recursion Patterns - Getting rid of stack overflows
 
 When using recursion in functional programming languages you may find yourself overflowing the stack. This post describes how to change our functions to allow them to recurse indefinitely without a stack overflow.
 
+&nbsp;
+
+---
+
 ## TL;DR
 
 - The name of the game is *staying tail recursive*
 - Enable tail recursion by passing down computed values
 - Stick to one recursive call at a time by passing down a list of recursions to be done
 
+---
+
+&nbsp;
 
 If we reach a stack overflow it is because we are not taking advantage of tail recursion. The fix is: use tail recursion. How to do that, however, is not always very clear. 
 
@@ -167,7 +174,7 @@ A performant and stack safe version usually combines the accumulating parameter 
 
 In the case of fibonacci, the revealing insight is to realise that going up from *0* to *n* is a lot easier than going down from *n* to *0*. We pass two accumulators, one holding the outcome of `fib (next - 2)` and one holding the outcome of `fib (next - 1)`. 
 
-```elm
+``` elm
 fib n =
     if n == 0 || n == 1 then
         n
