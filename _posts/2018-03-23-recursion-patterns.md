@@ -25,7 +25,7 @@ If we reach a stack overflow it is because we are not taking advantage of tail r
 
 Quick recapitulation: If the very last thing our function does is to return the recursive call, it qualifies for [tail call optimisation](https://en.wikipedia.org/wiki/Tail_call). This optimisation makes the recursive call take the place of the invoking function in the stack, allowing us to recurse without growing the stack size. This eliminates the risk of a stack overflow.
 
-This function is tail recursive:
+This function is tail recursive (examples are in Elm):
 
 ``` haskell
 -- Pauses execution for n loops of the runtime
