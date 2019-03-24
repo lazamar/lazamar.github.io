@@ -3,7 +3,7 @@ layout: post
 title: Recursion Patterns - Getting rid of stack overflows
 ---
 
-When using recursion in functional programming languages you may find yourself overflowing the stack. This post describes how to change our functions to allow them to recurse indefinitely without a stack overflow.
+In functional programming languages you may find yourself overflowing the stack. This post describes techniques to achieve unbounded recursion without fear of the stack.
 
 &nbsp;
 
@@ -23,7 +23,7 @@ If we reach a stack overflow it is because we are not taking advantage of tail r
 
 ## Tail recursion
 
-Quick recapitulation: If the very last thing our function does is to return the recursive call, then the recursive call takes the place of the invoking function in the stack. This way we recurse without growing the stack. This means we eliminate the rist of a stack overflow.
+Quick recapitulation: If the very last thing our function does is to return the recursive call, it qualifies for [tail call optimisation](https://en.wikipedia.org/wiki/Tail_call). This optimisation makes the recursive call take the place of the invoking function in the stack, allowing us to recurse without growing the stack size. This eliminates the risk of a stack overflow.
 
 This function is tail recursive:
 
@@ -77,6 +77,8 @@ reverse_ acc list =
 		head::tail -> reverse_ (head::acc) tail
 ```
 
+Regardless of the size of the list being reversed, the depth of the stack is always 1.
+
 ## Generalising the accumulating parameter
 
 Now for a trickier example. Imagine we have a binary tree and we want to insert a value at its rightmost position.
@@ -101,8 +103,8 @@ The recursive call builds directly on the parent, but it is hard to see how we c
 
 We end up having two cases:
 
-- In the recursive case we shape the data in a digestable format, add it to the accumulating parameter and recurse
-- In the termination case we process all the data we accumulated
+- A recursive case where we shape the data in a digestible format, add it to the accumulating parameter and recurse
+- A termination case where we process all the data we accumulated
 
 
 Using this trick we can create a stack-safe version of `insertRightmost`.
@@ -132,7 +134,7 @@ joinNodes nodes right  =
 
 ### Multiple recursion calls
 
-Sometimes we need to make more than one recursive call. The fibonacci function is a good example but you will most likely come across that in [divide and conquer algorythms](https://en.wikipedia.org/wiki/Divide-and-conquer_algorithm).
+Sometimes we need to make more than one recursive call. The fibonacci function is a good example but you will most likely come across that in a [divide and conquer algorythm](https://en.wikipedia.org/wiki/Divide-and-conquer_algorithm).
 
 Here is the naive stack-overflowing version. 
 
@@ -159,15 +161,16 @@ fib_ todo done a =
       fib (a - 1::todo) done (a - 2) 
 ```
 
-Passing down a representation of computations to be done and one of completed computations is a very powerful concept. 
-It is this idea that enables the creation of stack safe versions of complicated algorithms.
+Passing down a representation of computations to be done and a representation of completed computations is a very powerful concept. 
+It is this idea that enables the creation of stack safe versions of many complicated algorithms.
+
 We can even think of zipper lists and zipper trees as data structures that embody this concept.
 
-You can fix your misbehaving recursive function by passing down to the recursive call everything you calculate.
+You can fix your misbehaving function by passing down everything you calculate to the recursive call.
 
 ## Performance and stack safety
 
-A performant and stack safe version usually combines the accumulating parameter and an insight about what your function in specific is doing. Unfortunately there is no formula for that part.
+A performant and stack safe version usually combines the accumulating parameter and an insight specific to your function about what it is doing. Unfortunately there is no formula for that part.
 
 In the case of fibonacci, the revealing insight is to realise that going up from *0* to *n* is a lot easier than going down from *n* to *0*. We pass two accumulators, one holding the outcome of `fib (next - 2)` and one holding the outcome of `fib (next - 1)`. 
 
@@ -185,4 +188,4 @@ fib_ minusTwo minusOne next target =
         fib_ minusOne (minusOne + minusTwo) (next + 1) target
 ```
 
-Last but not least, don't compare on equal footing the performance of stack-safe and non-stack-safe versions of a function. Rememer that one works and the other can cause problems. 
+Last but not least, don't compare on equal footing the performance of stack-safe and non-stack-safe versions of a function. Remember that one is reliable and the other isn't.
