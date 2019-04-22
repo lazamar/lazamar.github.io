@@ -4,13 +4,13 @@ title: About
 permalink: /about/
 ---
 
-I'm a London based software developer who plays mostly with Elm, JavaScript and Haskell.
+I'm a London based software developer who plays mainly with Elm, JavaScript and Haskell.
 
 I'm [@marcelolaza](https://twitter.com/Marcelolaza) on Twitter.
 
 I write mostly about easy things, like programming and algorithms, but sometimes I like to write about really hard stuff like life and people. For these days I have [It's all about focus](http://itsallaboutfocus.com/).
 
-Here are a couple of cool projects I am working on; contributions are very welcome.
+Here are a couple of projects I am working on; contributions are very welcome.
 
 ## [Silver Magpie](https://lazamar.co.uk/silver-magpie/)
 
