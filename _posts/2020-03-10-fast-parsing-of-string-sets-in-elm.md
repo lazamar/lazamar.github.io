@@ -159,16 +159,16 @@ When benchmarked, the real speedup ranges between 3 and 60 times faster than the
 
 In this simple benchmark I'm matching against the list of countries in the world.
 The numbers represent runs of the test per second (higher is better).
-You can see this test here https://ellie-app.com/8gJPXf44WdQa1.
-
-The greatest speedup is in the case where no options are matched, which is the worst case scenario. Our approach fails fast.
-
-The other two runs test matching one country in specific, or matching over a list with all countries such that every run is a match.
+You can see this test [here](https://ellie-app.com/8gJPXf44WdQa1).
 
 | Approach               | Mismatch  | Single match | All matches |
 | ---------------------- | --------- | ------------ | ----------- |
 | Trie                   | 1,591,743 | 26,684       | 1,571       |
 | OneOf + backtrackable  | 28,254    | 68,314       | 435         |
+
+The greatest speedup is in the case where no options are matched, which is the worst case scenario. Our approach fails fast.
+
+The other two runs test matching one country in specific, or matching over a list with all countries such that every run is a match.
 
 ## Conclusion
 
