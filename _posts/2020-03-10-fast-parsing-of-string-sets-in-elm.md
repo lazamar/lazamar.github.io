@@ -176,7 +176,7 @@ This problem illustrates a common characteristic of problems in computer science
 Many times just choosing the right data structure already wins you the battle.
 
 This approach was used in the implementation of the [dict-parser](https://github.com/lazamar/dict-parser/tree/1.0.2)
-library for fast parsing, which you can use like this:
+library for fast dictionary parsing, which you can use like this:
 
 ```elm
 import Parser.Dict as DictParser
@@ -191,7 +191,7 @@ friendName =
 		|> DictParser.fromDict
 ```
 
-One last catch is that if you are not careful options that describe a trie that is too big may overflow the stack.
+One last catch is that if you are not careful, options that describe a trie that is too big may overflow the stack.
 
-You can read about the techniques to prevent that from happening in that in here [Recursion Patterns - Getting rid of stack overflows](https://lazamar.github.io/recursion-patterns/).
+You can read about the techniques to prevent that from happening in here [Recursion Patterns - Getting rid of stack overflows](https://lazamar.github.io/recursion-patterns/).
 
