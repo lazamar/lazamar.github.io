@@ -3,7 +3,7 @@ layout: post
 title: Fast parsing of string sets in Elm
 ---
 
-Imagine you want to write a parser that will match any of a set of strings that you know beforehand.
+Imagine you want to write a parser to match any of a set of strings that you know beforehand.
 
 In Elm's standard parsing library you would use `Parser.oneOf`. Like this:
 
@@ -31,8 +31,8 @@ If the string we are matching against is `"lisa"`, for example, this parser will
 - Look at the first four characters in our parsed string and check whether they are equal to `"john"`. They aren't
 - Fail
 
-Oohf, that's not very good. From the first time we looked at this string we saw that there would be no match, but
-this parser has to try every single alternative before it can say that there is no match.
+Oohf, that's not very good. From the first time we looked at this string we saw that no match would come out of it, but
+this parser has to try every single alternative before it can see that.
 
 ### It is slow
 
@@ -165,13 +165,10 @@ The greatest speedup is in the case where no options are matched, which is the w
 
 The other two runs test matching one country in specific, or matching over a list with all countries such that every run is a match.
 
-+------------------------+-----------+--------------+-------------+
 | Approach               | Mismatch  | Single match | All matches |
-+========================+===========+==============+=============+
+| ---------------------- | --------- | ------------ | ----------- |
 | Trie                   | 1,591,743 | 26,684       | 1,571       |
-+------------------------+-----------+--------------+-------------+
 | OneOf + backtrackable  | 28,254    | 68,314       | 435         |
-+------------------------+-----------+--------------+-------------+
 
 ## Conclusion
 
