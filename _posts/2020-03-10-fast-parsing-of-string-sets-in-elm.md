@@ -36,12 +36,12 @@ this parser has to try every single alternative before it can see that.
 
 ### It is slow
 
-In trying all of these alternatives is not free. In fact, the first three letters of this string were consumed by the parser three times.
+Trying all of these alternatives is not free. In fact, the first three letters of this string were consumed by the parser three times.
 We are going through the same characters over and over again.
 
 For this reason using `oneOf` with `backtrackable` is [advised against](https://github.com/elm/parser/blob/master/semantics.md#backtrackable--oneof-inefficient) in the documentation.
 
-It also means that the time it takes for parser to run increases linearly with the number of alternatives it has. If parsing 100 names takes *x*, parsing 200 names takes *2\*x*.
+It also means that the time it takes for parser to run increases linearly with the number of alternatives it has. If parsing 100 names takes *X*, parsing 200 names takes *2\*X*.
 
 It will always try all possible options until it matches one, regardless of how the parsed string looks like.
 
