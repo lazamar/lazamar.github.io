@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Fast parsing of string sets in Elm
+title: Fast parsing of String Sets in Elm
 ---
 
 Imagine you want to write a parser to match any of a set of strings that you know beforehand.
