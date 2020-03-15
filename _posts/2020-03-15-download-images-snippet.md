@@ -1,9 +1,9 @@
 ---
 layout: post
-title: Snippet to download images from a webpage
+title: Download images from a page
 ---
 
-Often I need to download a many images from a webpage and end up trying and adjusting far too many snippets from StackOverflow.
+Often I need to download many images from a webpage and end up trying and adjusting far too many snippets from StackOverflow.
 
 Here is a snippet that works. Give it two strings to download an image.
 
@@ -11,7 +11,7 @@ Here is a snippet that works. Give it two strings to download an image.
 async function download(url, name) {
     const res = await fetch(url);
     const blob = await res.blob();
-    const blobUrl =URL.createObjectURL(blob);
+    const blobUrl = URL.createObjectURL(blob);
 
     const a = document.createElement("a");
     a.href = blobUrl
