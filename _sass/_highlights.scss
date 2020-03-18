@@ -121,4 +121,14 @@ code {
 .highlight .il { color: #0000cf; font-weight: bold } /* Literal.Number.Integer.Long */
 
 /* inline codes */
-.highlighter-rouge { color: firebrick; font-size: 1em; }
+code.highlighter-rouge {
+    color: firebrick;
+    font-size: 1em;
+}
+
+// Code blocks
+div.highlighter-rouge {
+    border-radius: 0;
+    border: 2px solid black;
+    margin: 1.5em 0;
+}
