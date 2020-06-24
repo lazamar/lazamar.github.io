@@ -3,7 +3,7 @@ layout: post
 title: Writing Better If Statements
 ---
 
-We all know how important code comments are, but we all aim for that marvelous holy grail of coding: the self documenting code. That is, code that does not need comments, you can read it like a book.
+We all know how important code comments are, but we all aim for that marvellous holy grail of coding: the self documenting code. That is, code that does not need comments, you can read it like a book.
 
 When I read [Code Complete 2](https://www.amazon.co.uk/Code-Complete-Practical-Handbook-Construction/dp/0735619670) I had something around an order of magnitude improvement in my coding. One of the things that struck me was how much better my `if` and `while` statements became.
 

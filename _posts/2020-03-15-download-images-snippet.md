@@ -3,7 +3,7 @@ layout: post
 title: Download images from a page
 ---
 
-Often I need to download many images from a webpage and end up trying and adjusting far too many snippets from StackOverflow.
+Often I need to download many images from a web page and end up trying and adjusting far too many snippets from Stack Overflow.
 
 Here is a snippet that works. Give it two strings to download an image.
 

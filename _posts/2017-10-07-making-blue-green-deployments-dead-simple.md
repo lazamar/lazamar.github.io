@@ -27,7 +27,7 @@ server
         }
     }
 
-```   
+```
 
 When its time to put a new version live, we change the `CONTAINER_COLOR` in the configuration file and run `service nginx reload`, which will make the new configuration take effect.
 
@@ -35,7 +35,7 @@ When its time to put a new version live, we change the `CONTAINER_COLOR` in the 
 
 We will use [easy-deploy](https://github.com/lazamar/easy-deploy) to do the proxy and network handling.
 
-First we download the latest version from the [github page](https://github.com/lazamar/easy-deploy/releases) and put it in whatever folder we want.
+First we download the latest version from the [Github page](https://github.com/lazamar/easy-deploy/releases) and put it in whatever folder we want.
 
 We need to make it executable, so let's do that with
 
@@ -66,7 +66,7 @@ When it's time to switch to let's say version 2 we can just run the same command
 path/to/easy-deploy -p 8080:8080 -v some/volume:some/path my-image:v2.0
 ```
 
-Now a the new version is in place in a container with the colour green.
+Now the new version is in place in a container with the colour green.
 
 ```
 docker ps
@@ -81,4 +81,4 @@ This will take care of automatically running the two versions in parallel, redir
 
 That's it.
 
-I built easy-deploy because there wasn't anything around to do that in a simple, one command, way. If you find it helpful do give me a shout at [@marcelolaza](https://twitter.com/Marcelolaza).  
+I built easy-deploy because there wasn't anything around to do that in a simple, one command, way. If you find it helpful do give me a shout at [@marcelolaza](https://twitter.com/Marcelolaza).

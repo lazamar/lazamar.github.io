@@ -126,10 +126,10 @@ That's it. Just run `grunt rollup` and you will see the output in the build fold
 
 # Using the JavaScript API
 
-Although in my persolnal experience all the methods performed exactly the same,
+Although in my personal experience all the methods performed exactly the same,
 the Rollup team advise in favour of using the JavaScript API over the other methods.
 
-For the JS Api we will run:
+For the JS API we will run:
 
 ```
 npm install --save-dev rollup

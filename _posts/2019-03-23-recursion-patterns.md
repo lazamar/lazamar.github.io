@@ -19,7 +19,7 @@ In functional programming languages you may find yourself overflowing the stack.
 
 &nbsp;
 
-If we reach a stack overflow it is because we are not taking advantage of tail recursion. The fix is: use tail recursion. How to do that, however, is not always very clear. 
+If we reach a stack overflow it is because we are not taking advantage of tail recursion. The fix is: use tail recursion. How to do that, however, is not always very clear.
 
 ## Tail recursion
 
@@ -29,10 +29,10 @@ This function is tail recursive (examples are in Elm):
 
 ``` haskell
 -- Pauses execution for n loops of the runtime
-sleep n = 
-	if n > 0 then 
-		sleep (n - 1) 
-	else 
+sleep n =
+	if n > 0 then
+		sleep (n - 1)
+	else
 		n
 ```
 
@@ -40,10 +40,10 @@ This other function, however, is not. You can test that by passing it a big numb
 
 ``` haskell
 -- Just count from n to 0. Returns n.
-count n = 
-	if n > 0 then 
+count n =
+	if n > 0 then
 		count (n - 1) + 1
-	else 
+	else
 		n
 ```
 
@@ -58,11 +58,11 @@ If every recursive call is building directly on top of the previous call's work,
 ``` haskell
 count n = count_ 0 n
 
-count_ acc n = 
-	if n > 0 then 
-		-- Notice how now `count` is the last function we invoke 
+count_ acc n =
+	if n > 0 then
+		-- Notice how now `count` is the last function we invoke
 		count_ (acc + 1) (n - 1)
-	else 
+	else
 		acc
 ```
 
@@ -71,7 +71,7 @@ If we want to reverse a list, for example, we can do it in a stack-safe way by u
 ``` haskell
 reverse list = reverse_ [] list
 
-reverse_ acc list = 
+reverse_ acc list =
 	case list of
 		[] -> acc
 		head::tail -> reverse_ (head::acc) tail
@@ -92,9 +92,9 @@ type Tree a
 
 insertRightmost new tree =
 	case tree of
-		Node left value right -> 
+		Node left value right ->
 			Node left value (insertRightmost new right)
-		Empty -> 
+		Empty ->
 			Node Empty new Empty
 
 ```
@@ -118,50 +118,50 @@ insertRightmost value tree =
 insertRightmost_ : List (Tree a, a) -> a -> Tree a -> Tree a
 insertRightmost_ acc new tree =
 	case tree of
-		Node left value right -> 
+		Node left value right ->
 			insertRightmost_ ((left, value) :: acc) new right
-		Empty -> 
+		Empty ->
 			joinNodes acc (Node Empty new Empty)
 
 joinNodes : List (Tree a, a) -> Tree a -> Tree a
 joinNodes nodes right  =
-	case nodes of 
-		[] -> 	
+	case nodes of
+		[] ->
 			node
-		((left, value) :: tail) -> 
+		((left, value) :: tail) ->
 			joinNodes tail (Node left value right)
 ```
 
 ### Multiple recursion calls
 
-Sometimes we need to make more than one recursive call. The fibonacci function is a good example but you will most likely come across that in a [divide and conquer algorythm](https://en.wikipedia.org/wiki/Divide-and-conquer_algorithm).
+Sometimes we need to make more than one recursive call. The Fibonacci function is a good example but you will most likely come across that in a [divide and conquer algorithm](https://en.wikipedia.org/wiki/Divide-and-conquer_algorithm).
 
-Here is the naive stack-overflowing version. 
+Here is the naive stack-overflowing version.
 
 ```haskell
-fib n = 
+fib n =
 	if n == 0 || n == 1 then
-		n 
+		n
 	else
 		fib (n - 1) + fib (n - 2)
 ```
 
-In cases like these we can keep two accumulators, one with things to do, and one with the work we completed. 
+In cases like these we can keep two accumulators, one with things to do, and one with the work we completed.
 
 ```haskell
 fib n = fib_ [] 0 a
 
 fib_ : List Int -> Int -> Int -> Int
 fib_ todo done a =
-  if a == 0 || a == 1 then 
-      case todo of                               
+  if a == 0 || a == 1 then
+      case todo of
           [] -> done + a
           head::tail -> fib tail (done + a) head
-  else                                          
-      fib (a - 1::todo) done (a - 2) 
+  else
+      fib (a - 1::todo) done (a - 2)
 ```
 
-Passing down a representation of computations to be done and a representation of completed computations is a very powerful concept. 
+Passing down a representation of computations to be done and a representation of completed computations is a very powerful concept.
 It is this idea that enables the creation of stack safe versions of many complicated algorithms.
 
 We can even think of zipper lists and zipper trees as data structures that embody this concept.
@@ -172,19 +172,19 @@ You can fix your misbehaving function by passing down everything you calculate t
 
 A performant and stack safe version usually combines the accumulating parameter and an insight specific to your function about what it is doing. Unfortunately there is no formula for that part.
 
-In the case of fibonacci, the revealing insight is to realise that going up from *0* to *n* is a lot easier than going down from *n* to *0*. We pass two accumulators, one holding the outcome of `fib (next - 2)` and one holding the outcome of `fib (next - 1)`. 
+In the case of Fibonacci, the revealing insight is to realise that going up from *0* to *n* is a lot easier than going down from *n* to *0*. We pass two accumulators, one holding the outcome of `fib (next - 2)` and one holding the outcome of `fib (next - 1)`.
 
 ``` haskell
 fib n =
     if n == 0 || n == 1 then
         n
-    else 
+    else
         fib_ 0 1 2 n
- 
+
 fib_ minusTwo minusOne next target =
     if next > target then
         minusOne
-    else 
+    else
         fib_ minusOne (minusOne + minusTwo) (next + 1) target
 ```
 

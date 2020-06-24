@@ -62,7 +62,7 @@ To do that we could group our matches by starting word. This way we can check wh
 
 matches =
     [   ( "j"
-        , ["joe", "joey", "john"]
+        , ["oe", "oey", "ohn"]
         )
     ]
 
@@ -80,7 +80,7 @@ To improve the situation we could try to apply this trick again, but this time c
 matches =
     [   ( "j"
         , [   ( "o"
-              , ["joe", "joey", "john"]
+              , ["e", "ey", "hn"]
               )
           ]
         )

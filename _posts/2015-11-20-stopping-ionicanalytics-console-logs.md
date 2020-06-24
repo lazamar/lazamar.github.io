@@ -16,7 +16,7 @@ $ionicAnalytics for some reason logs everything it is doing. If you are debuggin
 ![$ionicAnalytics logs](../images/ionicAnalyticsLogs.png)
 
 
-When the documentation is not enough what better solution than looking at the source code and trying to figure out what kind of sorcery it is doing? Inside your `www` folder you will find a `lib` folder containing all of ionic's *sauce*. My beloved [Atom](https://atom.io/) (also open source, by the way) has an option to *Search in Directory*, which is exactly what we need. You could also do it with `grep` and the terminal, which gives you extra points for style, but that's not the point of this post.
+When the documentation is not enough what better solution than looking at the source code and trying to figure out what kind of sorcery it is doing? Inside your `www` folder you will find a `lib` folder containing all of Ionic's *sauce*. My beloved [Atom](https://atom.io/) (also open source, by the way) has an option to *Search in Directory*, which is exactly what we need. You could also do it with `grep` and the terminal, which gives you extra points for style, but that's not the point of this post.
 
 
 ![Folder Search](../images/ionicAnalyticsSearch.png)

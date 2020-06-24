@@ -39,7 +39,7 @@ const timeToNextSubmission = timeToPLaylistEnd - 10000; // in ms
 setTimeout(() => this.submitToSpotify(), timeToNextSubmission);
 ```
 
-As you can see, more songs will be submitted to Spofity 10 seconds before the currently playing playlist reach its end. That doesn't sound so bad, as every submission would add some 15 minutes of songs to the playlist, scheduling the next submission to around 14 minutes and 50 seconds in the future. But what happens if the submission fails? How much time will it take for the playlist to end? Well, it will take less than 10 seconds, so let's submit stuff now! But what if nothing was added yet? Let's submit it again right now!
+As you can see, more songs will be submitted to Spotify 10 seconds before the currently playing playlist reach its end. That doesn't sound so bad, as every submission would add some 15 minutes of songs to the playlist, scheduling the next submission to around 14 minutes and 50 seconds in the future. But what happens if the submission fails? How much time will it take for the playlist to end? Well, it will take less than 10 seconds, so let's submit stuff now! But what if nothing was added yet? Let's submit it again right now!
 
 And here you have it. The very fast node server was sending thousands and thousands of requests per second, making the router simply overwhelmed and unable to cope with anything else. My very innocent script had turned evil and was performing a [**D**enial **O**f **S**ervice](https://en.wikipedia.org/wiki/Denial-of-service_attack) attack on my company's router, blocking other computers from accessing the internet and burning a few pounds in man-hours from my company.
 

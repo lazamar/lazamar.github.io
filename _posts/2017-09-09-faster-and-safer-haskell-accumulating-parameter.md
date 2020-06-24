@@ -3,10 +3,10 @@ layout: post
 title: Faster and safer Haskell - benchmarks for the accumulating parameter
 ---
 
-Haskell's lazyness can cause problems with recursive functions if they are not handled properly. In some cases this can be dealt with by using an [accumulating parameter](https://wiki.haskell.org/Performance/Accumulating_parameter). Haskell's [wiki page](https://wiki.haskell.org/Performance/Accumulating_parameter) on the subject does a great job in explaining how that works. Here I register some benchmarks on the wiki's examples so we can see how much that matters.   
+Haskell's laziness can cause problems with recursive functions if they are not handled properly. In some cases this can be dealt with by using an [accumulating parameter](https://wiki.haskell.org/Performance/Accumulating_parameter). Haskell's [wiki page](https://wiki.haskell.org/Performance/Accumulating_parameter) on the subject does a great job in explaining how that works. Here I register some benchmarks on the wiki's examples so we can see how much that matters.
 
 
-I won't go into details as to why one implementation performs better than the other as the wiki's article is already very clear and conscise. I will stick to showing the code and the benchmarks.
+I won't go into details as to why one implementation performs better than the other as the wiki's article is already very clear and concise. I will stick to showing the code and the benchmarks.
 
 The task in our hands is to calculate the length of a list. To make sure this is working we will print the length of a really long one.
 
@@ -69,6 +69,6 @@ I ran some micro-benchmarks on these functions to see how they did in smaller ta
 
 Execution count: Completely lazy ≈ 800x. Tail recursive ≈ 1700x. Strict + tail recursive ≈ 1700x.
 
-We can see that just by using tail recursion we cut our function’s running time in half. Removing thunk allocation in our accumulator added a slight performance improvement, but nothing too significant.
+We can see that just by using tail recursion we cut our function's running time in half. Removing thunk allocation in our accumulator added a slight performance improvement, but nothing too significant.
 
-These speed rating, however, matter very little if our program will crash. The last implementation is not only the **fastest**, it is also the the **safest** and **most efficient**.   
+These speed rating, however, matter very little if our program will crash. The last implementation is not only the **fastest**, it is also the **safest** and **most efficient**.

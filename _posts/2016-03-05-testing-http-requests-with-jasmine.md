@@ -40,7 +40,7 @@ request.respondWith({ status: 200, responseText: "Oh yeah!" });
 As you can see, we didn't have to change anything in our `myFunctionThatMakesRequests` to make it work. With Jasmine Ajax we can just intercept any xhr request and give it a custom response; or no response at all, if that is what we want. We can construct the response object to make it look whatever way we want. This is specially useful when testing code that uses a third party API but we do not want to be sending requests to the API endpoint all the time.
 
 ## Using this in a real test
-In our small snippet of code we just answered the request, but didn't care about what happened to the response. In a real test we must check not only if the request was right, but also if the response was adequately processed. For that we will need to write *asynchronous tests*.  
+In our small snippet of code we just answered the request, but didn't care about what happened to the response. In a real test we must check not only if the request was right, but also if the response was adequately processed. For that we will need to write *asynchronous tests*.
 
 To make our test asynchronous we just need to include inside our suite (`describe` in Jasmine) a setup function (`beforeEach`) and call it's first argument whenever we are ready to start our specs (`it`). We will make the request and answer it within the setup function so that in our specs we can test the outcome of the entire process. It will look like this:
 
@@ -85,7 +85,7 @@ describe('myFunctionThatMakesRequests', function () {
 })
 ```
 
-One interesting thing to note is the the `request` variable was declared outside of the `beforeEach`, otherwise it would be outside of our specs' scope.
+One interesting thing to note is the `request` variable was declared outside of the `beforeEach`, otherwise it would be outside of our specs' scope.
 
 The same way we tested the request, we can test the handling of the response. Let's suppose `myFunctionThatMakesRequests` takes two arguments, a callback for when the request succeeds and one for when the request fails. We can then create a *spy* and make sure the right function is being called.
 
@@ -128,7 +128,7 @@ describe('myFunctionThatMakesRequests', function () {
     it("calls the onSuccess callback", function(done) {
       expect(onSuccess).toHaveBeenCalled();
       done();
-    });    
+    });
   })
 
   describe('on failure', function () {
@@ -140,7 +140,7 @@ describe('myFunctionThatMakesRequests', function () {
     it("calls the onFailure callback", function(done) {
       expect(onFailure).toHaveBeenCalled();
       done();
-    });    
+    });
   })
 })
 ```

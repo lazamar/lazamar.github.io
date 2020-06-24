@@ -5,7 +5,7 @@ title: Dispatching from inside a reducer in Redux
 
 Redux is just great, but to be fair there isn't an elegant way to perform asynchronous actions on it.
 
-If you try to be seaky and trigger a `store.dispatch` from your reducer function, you will get a big `Cannot dispatch in a middle of dispatch` error; which isn't very helpful.
+If you try to be sneaky and trigger a `store.dispatch` from your reducer function, you will get a big `Cannot dispatch in a middle of dispatch` error; which isn't very helpful.
 
 To be fair, this constraint is quite reasonable. The goal of the tool is to assure you that the only thing that changes state is the return value of a reducer function. By performing another dispatch in the middle of it, you will have changed the state of the application before returning a value.
 
@@ -37,7 +37,7 @@ const asyncDispatchMiddleware = store => next => action => {
   next(actionWithAsyncDispatch);
   syncActivityFinished = true;
   flushQueue();
-};   
+};
 
 ```
 
@@ -63,11 +63,11 @@ function reducer(state, action) {
 
 This provides a much clearer way to handle asynchronous code than alternatives such as redux-saga and Redux Thunk. Redux Thunk, for example, encourages you to keep some application logic in your action creators, which is not really ideal. I like to have my action creators solely return a simple plain object, that's it. Business logic should be contained in the reducers.
 
-Well. That's basically it. No need to worry about async with Redux anymore.
+Well. That's basically it. No need to worry about async with Redux any longer.
 
 ---
 **TL;DR**
 
-- Use a the middleware I show above to add a `asyncDispatch` method to all your actions so you can dispatch new actions that will be executed after your current reducer is finished
+- Use the middleware I show above to add a `asyncDispatch` method to all your actions so you can dispatch new actions that will be executed after your current reducer is finished
 
 ---

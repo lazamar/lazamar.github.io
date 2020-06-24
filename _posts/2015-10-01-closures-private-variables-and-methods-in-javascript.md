@@ -6,7 +6,7 @@ Some languages such as Java allow us to declare methods and variables in a class
 as private, restraining anything outside the class itself to access them.
 
 This is very important to achieve encapsulation and conform to the best
-practices of object oriented programing. Making a variable private also allows
+practices of object oriented programming. Making a variable private also allows
 the function to have total control over how it is manipulated.
 
 JavaScript, however, does not allow you to specify whether variables and methods
@@ -40,7 +40,7 @@ But this object is very interesting
 because unlike anything outside the function it has access to the
 balance variable, which only exists inside the function. Even though the function
 has returned already, because the returned object still references variables of
-the the function, these variables become long lived and will not
+the function, these variables become long lived and will not
 be destroyed. We can get the balance by executing `myBankAccount.getBalance()`.
 
 
@@ -68,7 +68,7 @@ var bankAccount = function(initialBalance){
       return balance;
     },
     withdraw: function(amount){
-      // Check if we have enought money to withdraw all that.
+      // Check if we have enough money to withdraw all that.
       if(amount <= balance){
         balance -= amount;
         return true;
