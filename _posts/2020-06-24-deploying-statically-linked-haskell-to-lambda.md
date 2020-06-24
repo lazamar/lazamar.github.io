@@ -18,7 +18,7 @@ The code for this post can be found at [lazamar/lambda-haskell](https://github.c
 I'm using [aws-lambda-haskell-runtime](https://hackage.haskell.org/package/aws-lambda-haskell-runtime)
 as the runtime for my Haskell code on Lambda. I wanted to see what data from the request Amazon
 was making available. So the program will simply get a request as a JSON, prettify it and return
-that. This `Main.hs`, the only Haskell file.
+that. This is `Main.hs`, the only Haskell file.
 
 ``` haskell
 {-# LANGUAGE DeriveGeneric  #-}
@@ -84,11 +84,12 @@ executable lambda-test
   default-language:    Haskell2010
 ```
 
-To statically link our Haskell program we will use Nix and make use of the excellent
+To statically link our Haskell program I used Nix and made use of the excellent
 [static-haskell-nix](https://github.com/nh2/static-haskell-nix) project.
 
 They created a [nix file](https://github.com/nh2/static-haskell-nix/blob/master/survey/default.nix)
-that modifies all Haskell packages to have them and all of their dependencies be statically linked.
+that modifies all existing Haskell packages in Nix to have them and all of their 
+dependencies be statically linked.
 
 They also keep a [list](https://github.com/nh2/static-haskell-nix/issues/4#issuecomment-406838083)
 of packages that do not successfully compile with this approach. It works with more than 90% of
@@ -156,7 +157,7 @@ two lines of code at the beginning of my Nix file I can use it with `sources.sta
 
 To have all of the modified Nix packages I import `sources.static-haskell-nix + "/survey/default.nix"`.
 After doing that I found that the project is pinned to an old version of `nixpkgs` and I needed
-a more recent one for `aws-lambda-haskell-runtime`. To override that I pinned my desired version
+a more recent one for `aws-lambda-haskell-runtime`. To override it I pinned my desired version
 of `nixpkgs` with `niv add NixOS/nixpkgs -a rev=<sha256>` and used it by setting the `normalPkgs`
 attribute with this line:
 
@@ -164,24 +165,24 @@ attribute with this line:
       normalPkgs = import sources.nixpkgs {};
 ```
 
-I use [`cabal2nix`](https://github.com/NixOS/cabal2nix) to transform our Cabal file in build
-instruction in Nix.
+I use [`cabal2nix`](https://github.com/NixOS/cabal2nix) to transform my Cabal file into a
+Nix derivation.
 `callCabal2nix` is a convenience function that allows us to use `cabal2nix` without needing two
 nix files, one for the converted cabal file and one for the actual build instructions. I can
 just have the nix file with build instructions converting our cabal file to nix on the fly.
 
 `callCabal2nix` gets the sources it will use as input. Usually I would just pass the entire directory
-to it, however, whenever I run `nix-build` the result gets compiled to the `result` subdirectory
+to it. However, whenever I run `nix-build` the result gets compiled to the `result` subdirectory
 which means that there was a change to our sources and things will be rebuilt the next time I
 run `nix-build` again. That's not very smart. It is not true that everything in the repository is
 source code. Actually only things tracked by git are real source code and it would be smarter if
 only those files were taken into consideration. And that's exactly what [hercules-ci/gitignore.nix](https://github.com/hercules-ci/gitignore.nix)
 does.
 
-Finally we use the `overrideCabal` function to make sure GHC will use statically-linked everything.
+Finally I use the `overrideCabal` function to make sure GHC will use statically-linked everything.
 
 With all of that in place I can run `nix-build --attr lambda-test default.nix` and after a few
-hours of downloads and compilation I have a beautiful binary under `result/bin/lambda-test`.
+hours of downloads and compilation I have a binary under `result/bin/lambda-test`.
 
 I can confirm that this is not using any dynamically linked libraries like so:
 
@@ -192,7 +193,7 @@ ldd: result/bin/lambda-test: Not a valid dynamic program
 
 Success!
 
-For this to work in Lambda we need to rename it to `bootstrap` and provide it wrapped in a zip
+For this to work in Lambda I need to rename it to `bootstrap` and provide it wrapped in a zip
 file named `function.zip`. I copied Joachim Breitner's Nix snipped to automate that in `function-zip`.
 
 Now I can run `nix-build` and inside the `result` folder there will be a `function.zip`. This is
@@ -200,16 +201,16 @@ the file I will upload to Lambda further down.
 
 ## Caching
 
-Building it once took very long. Thankfully Nix reuse that and it will be rather quick to rebuild
-the code in the same machine. However, whenever I want to build it somewhere else the process will
+Building it once took very long. Thankfully Nix reuses that and it will be rather quick to rebuild
+this code in the same machine. Nonetheless, whenever I want to build it somewhere else the process will
 start again.
 
-To avoid that we can use [Cachix](https://github.com/cachix/cachix), a content-addressed binary
-cache that will allow us to share the compilation work we do locally with other machines.
+To avoid that I use [Cachix](https://github.com/cachix/cachix), a content-addressed binary
+cache that will allow me to share the compilation work I do locally with other machines.
 
 To set it up I installed Cachix (`nix-env -iA cachix -f https://cachix.org/api/v1/install`),
-created an account at https://cachix.org/ and clicked the `Create binary cache` button there,
-which allowed me to create a cache that I named `lazamar`.
+created an account at [https://cachix.org/](https://cachix.org/) and clicked the `Create binary cache` button there,
+which allowed me to create my `lazamar` cache.
 
 I wanted to use my cache as well as the `static-haskell-nix` cache.
 
@@ -218,7 +219,7 @@ cachix use static-haskell-nix
 cachix use lazamar
 ```
 
-Now I just needed to upload my results to my cache whenever I built the project.
+Now I just needed to make sure to upload my results whenever I built the project.
 
 ```
 nix-build | cachix push lazamar
@@ -230,9 +231,10 @@ neither does CI.
 ## Amazon Lambda
 
 Amazon Lambda allows you to deploy a server that is off most of the time and wakes up only when
-a request arrives. This is great because you don't need to pay to keep it running.
+a request arrives. This is great because you don't need to pay to keep it running all the time,
+you only pay for the small bursts of activity.
 
-There are ways to use it with various languages, but for Haskell we can use `aws-lambda-haskell-runtime`
+There are ways to use it with various languages, but for Haskell I can use `aws-lambda-haskell-runtime`
 and just provide a binary inside a zip. Pretty simple.
 
 For instructions on how to create a Haskell Lambda you can follow [this guide](https://theam.github.io/aws-lambda-haskell-runtime/06-deploying-a-lambda.html).
@@ -252,12 +254,12 @@ And here is how the set-up looks like:
 
 ![Amazon Lambda Configuration](../images/2020-06-24-lambda-test-amazon-setup.png)
 
-## CI
+## Continuous Delivery
 
 The last step remaining is having the code automatically built and deployed to Lambda every
 time I push a commit to GitHub.
 
-GitHub Actions are very very easy to set-up and understand and extremely convenient. However,
+GitHub Actions are very very easy to set-up and understand as well as being extremely convenient. Still,
 I found the documentation to be overly verbose. If you are not familiar with GitHub Actions, I
 found the [Workflow Configuration](https://help.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow)
 and the [Workflow Syntax](https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions)
@@ -327,6 +329,6 @@ For more elaborate Haskell building I recommend Dmitrii Kovanikov's [Dead simple
 GitHub Actions for Haskell](https://kodimensional.dev/github-actions).
 
 This concludes the full set-up. With that I have code quickly compiled to a statically-linked
-binary in CI and automatically deployed to Amazon lambda on every push.
+binary in CI and automatically deployed to Amazon Lambda on every push.
 
 
