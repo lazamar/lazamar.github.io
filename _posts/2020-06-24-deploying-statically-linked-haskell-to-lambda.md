@@ -4,7 +4,7 @@ title: Deploying statically-linked Haskell to Lambda
 ---
 
 In [his post about a Telegram bot](https://www.joachim-breitner.de/blog/770-A_Telegram_bot_in_Haskell_on_Amazon_Lambda)
-Joachim Breitner mentions statically compiling his program to have it run in Amazon's version of
+Joachim Breitner mentions compiling his program into a static binary to have it run in Amazon's version of
 Linux without needing to build it inside a container. I was interested in experimenting with
 Amazon Lambda and having statically linked Haskell programs sounded like a great idea too, so this
 is a write-up of what it took to get those things working.
@@ -15,10 +15,11 @@ Actions.
 
 The code for this post can be found at [lazamar/lambda-haskell](https://github.com/lazamar/lambda-haskell).
 
-I'm using [aws-lambda-haskell-runtime](https://hackage.haskell.org/package/aws-lambda-haskell-runtime)
-as the runtime for my Haskell code on Lambda. I wanted to see what data from the request Amazon
-was making available. So the program will simply get a request as a JSON, prettify it and return
-that. This is `Main.hs`, the only Haskell file.
+In Lambda we need a special wrapping layer to run Haskell code. I'm using
+[aws-lambda-haskell-runtime](https://hackage.haskell.org/package/aws-lambda-haskell-runtime)
+for that. I wanted to see what data from the request Amazon was making available, so the
+program will simply get a request as a JSON, prettify it and return that. This is `Main.hs`,
+the only Haskell file.
 
 ``` haskell
 {-# LANGUAGE DeriveGeneric  #-}
@@ -88,7 +89,7 @@ To statically link our Haskell program I used Nix and made use of the excellent
 [static-haskell-nix](https://github.com/nh2/static-haskell-nix) project.
 
 They created a [nix file](https://github.com/nh2/static-haskell-nix/blob/master/survey/default.nix)
-that modifies all existing Haskell packages in Nix to have them and all of their 
+that modifies all existing Haskell packages in Nix to have them and all of their
 dependencies be statically linked.
 
 They also keep a [list](https://github.com/nh2/static-haskell-nix/issues/4#issuecomment-406838083)
@@ -152,14 +153,15 @@ commits. This is great to make sure that my build will be exactly the same even 
 with a different revision of `nixpkgs` or if the derivations I use are updated.
 
 Adding a package with `Niv` is super simple. Just `niv add nh2/static-haskell-nix` will pin a
-version of `static-haskell-nix` in a json file under the newly created `nix` directory and with
-two lines of code at the beginning of my Nix file I can use it with `sources.static-haskell-nix`.
+version of `static-haskell-nix` in a json file under the newly created `nix` directory and by
+adding two lines of code at the beginning of my Nix file to load the Niv sources I can use it
+with `sources.static-haskell-nix`.
 
 To have all of the modified Nix packages I import `sources.static-haskell-nix + "/survey/default.nix"`.
-After doing that I found that the project is pinned to an old version of `nixpkgs` and I needed
-a more recent one for `aws-lambda-haskell-runtime`. To override it I pinned my desired version
-of `nixpkgs` with `niv add NixOS/nixpkgs -a rev=<sha256>` and used it by setting the `normalPkgs`
-attribute with this line:
+After doing that I found that the project is pinned to an old revision of `nixpkgs` and I needed
+a more recent one for `callCabal2nix` (it goes into an infinite loop in the pinned one).
+To override it I pinned my desired revision with `niv add NixOS/nixpkgs -a rev=<sha256>` and
+used it by setting the `normalPkgs` attribute with this line:
 
 ```
       normalPkgs = import sources.nixpkgs {};
@@ -167,17 +169,18 @@ attribute with this line:
 
 I use [`cabal2nix`](https://github.com/NixOS/cabal2nix) to transform my Cabal file into a
 Nix derivation.
-`callCabal2nix` is a convenience function that allows us to use `cabal2nix` without needing two
-nix files, one for the converted cabal file and one for the actual build instructions. I can
-just have the nix file with build instructions converting our cabal file to nix on the fly.
 
-`callCabal2nix` gets the sources it will use as input. Usually I would just pass the entire directory
-to it. However, whenever I run `nix-build` the result gets compiled to the `result` subdirectory
-which means that there was a change to our sources and things will be rebuilt the next time I
-run `nix-build` again. That's not very smart. It is not true that everything in the repository is
-source code. Actually only things tracked by git are real source code and it would be smarter if
-only those files were taken into consideration. And that's exactly what [hercules-ci/gitignore.nix](https://github.com/hercules-ci/gitignore.nix)
-does.
+`callCabal2nix` is a convenience function that allows us to use `cabal2nix` without needing two
+nix files (the converted-to-nix cabal and the actual build instructions). I can just have the
+nix file with build instructions converting our cabal file to nix on the fly.
+
+`callCabal2nix` gets the sources it will use as input. Usually I would just pass the entire
+directory to it. However, whenever I run `nix-build` the result gets compiled to the `result`
+subdirectory which means that there was a change to our sources and things will be rebuilt the
+next time I run `nix-build` again. That's not very smart. It is not true that everything in the
+repository is source code. Actually only things tracked by git are real source code and it
+would be smarter if only those files were taken into consideration. And that's exactly what
+[hercules-ci/gitignore.nix](https://github.com/hercules-ci/gitignore.nix) does.
 
 Finally I use the `overrideCabal` function to make sure GHC will use statically-linked everything.
 
@@ -269,6 +272,7 @@ I created a workflow and enabled GitHub Actions by adding `.github/workflows/ci.
 And that file looks like this:
 
 ``` yaml
+{% raw %}
 name: CI
 
 # Trigger the workflow on push or pull request, but only for the master branch
@@ -313,6 +317,7 @@ jobs:
             - name: Deploy to Lambda
               run: |
                 aws lambda update-function-code --function-name lambda-test --zip-file fileb://result/function.zip
+{% endraw %}
 ```
 
 This is a workflow that will be triggered for pull requests and pushes to `master` and contains
