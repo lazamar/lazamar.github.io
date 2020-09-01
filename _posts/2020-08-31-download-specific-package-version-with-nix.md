@@ -3,8 +3,6 @@ layout: post
 title: Searching and installing old versions of Nix packages
 ---
 
-This post describes how to find and install old versions of packages available in the Nix package manager.
-
 TL;DR: There is no Nix-native way of doing that. In this post I describe the process that led to the creation of [Nix Package Versions](https://lazamar.co.uk/nix-versions), the tool that provides this functionality.
 
 ## The problem
