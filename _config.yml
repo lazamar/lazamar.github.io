@@ -11,6 +11,10 @@ description: Developing for the Interwebs
 # URL of your avatar or profile pic (you could use your GitHub profile pic)
 avatar: https://avatars1.githubusercontent.com/u/11493705?v=3&s=460
 
+collections:
+  content:
+    output: true
+
 #
 # Flags below are optional
 #
