@@ -18,4 +18,4 @@ A clean and beautiful Twitter client for Google Chrome written entirely in [Elm]
 
 ## [Dict Parser](https://github.com/lazamar/dict-parser)
 
-Create a fast parser to match dictionary keys in Elm. 
+Create a fast parser to match dictionary keys in Elm.
