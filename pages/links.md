@@ -14,3 +14,9 @@ Stock images
 
 White noise for concentration
 -   [Noisli](https://www.noisli.com/)
+
+## Haskell
+
+[Overlappable instances](https://lukasz-golebiewski.github.io/haskell/effects/2021/01/06/overlappable-instances.html#fn:1)
+
+
