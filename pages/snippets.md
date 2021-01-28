@@ -1,10 +1,8 @@
 ---
 layout: page
 title: Snippets
-permalink: /links/
+permalink: /snippets/
 ---
-
-# Snippets
 
 A collection snippets that are useful to fetch quickly.
 
