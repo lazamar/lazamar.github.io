@@ -15,12 +15,15 @@ Stock images
 White noise for concentration
 -   [Noisli](https://www.noisli.com/)
 
+Exercises
+- [musclewiki.com](https://musclewiki.com/)
+
 ## Utilities
 
 - [ncdu](https://dev.yorhel.nl/ncdu/scr) - NCurses Disk Usage
 
 ## Haskell
 
-[Overlappable instances](https://lukasz-golebiewski.github.io/haskell/effects/2021/01/06/overlappable-instances.html#fn:1)
+- [Overlappable instances](https://lukasz-golebiewski.github.io/haskell/effects/2021/01/06/overlappable-instances.html#fn:1)
 
 
