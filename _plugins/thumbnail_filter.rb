@@ -3,6 +3,10 @@
 #
 # Description: Related posts thumbnail filter for Jekyll.
 #
+# Marcelo's note: It's been some time since I added this, but it
+# looks like this adds a thumbnail when sharing links to Twitter and
+# the like.
+#
 # Download: https://github.com/matallo/jekyll-thumbnail-filter
 # Documentation: https://github.com/matallo/jekyll-thumbnail-filter/blob/master/README.md
 # Issues: https://github.com/matallo/jekyll-thumbnail-filter/issues
