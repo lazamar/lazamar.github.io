@@ -1,6 +1,10 @@
 ---
 ---
 
+* {
+    box-sizing: border-box;
+}
+
 html {
     font-family: system-ui,sans-serif;
     line-height: 1.6;
@@ -10,22 +14,22 @@ html {
 nav, main, footer {
     max-width: 750px;
     margin: auto;
-}
-
-nav, footer {
     padding: 1em;
 }
 
 nav {
     border-bottom: 1px solid #a2a2a2;
-    margin-bottom: 1em;
 }
 
 footer {
-    display: flex;
-    justify-content: space-around;
     border-top: 1px solid #a2a2a2;
-    margin-top: 1em;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+
+    * {
+        margin: 0 .5em;
+    }
 }
 
 img {
@@ -34,6 +38,10 @@ img {
 
 a {
     text-decoration: none;
+}
+
+.muted {
+    opacity: 0.6;
 }
 
 // Settled on moving the import of syntax highlighting to the bottom of the
