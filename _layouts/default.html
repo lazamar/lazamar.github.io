@@ -16,22 +16,24 @@
 </head>
 <body>
     <nav>
-        <a href="{{ site.baseurl }}/">{{ site.name }}</a>
-        <a href="{{ site.baseurl }}/about">about</a>
-        <p>{{ site.description }}</p>
+        Marcelo Lazaroni
+        <div style="float: right;">
+            <a href="{{ site.baseurl }}/">Blog</a> /
+            <a href="{{ site.baseurl }}/about">About</a>
+        </div>
     </nav>
-
     <main>
       {{ content }}
     </main>
 
     <!--Footer-->
     <footer>
-        <a href="{{ site.baseurl }}/">Marcelo Lazaroni</a>
+        <a href="{{ site.baseurl }}/">Home</a>
         <a href="https://www.facebook.com/marcelo.lazaroni.1">Facebook</a>
         <a href="https://www.twitter.com/marcelolaza">Twitter</a>
         <a href="https://github.com/lazamar">GitHub</a>
         <a href="{{ site.url }}/feed.xml">RSS</a>
+        <a href="{{ site.baseurl }}/about">About</a>
     </footer>
 
     {% include analytics.html %}
