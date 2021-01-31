@@ -65,7 +65,6 @@ matches =
         , ["oe", "oey", "ohn"]
         )
     ]
-
 ```
 
 This works very well. When we see `"lisa"` we notice that we have no match starting with `l` and immediately fail. Much faster.
@@ -76,7 +75,6 @@ Nonetheless it is still somewhat better than the first version because if we did
 To improve the situation we could try to apply this trick again, but this time considering the second word instead of the first.
 
 ```elm
-
 matches =
     [   ( "j"
         , [   ( "o"
@@ -85,9 +83,6 @@ matches =
           ]
         )
     ]
-
-
-
 ```
 
 If we apply this technique over and over again we end up with a tree data structure called a **prefix tree**, also known as a [Trie](https://en.wikipedia.org/wiki/Trie).
@@ -127,14 +122,12 @@ Elm Dictionaries perform binary search when looking for a key, so we can store o
 In the end the Trie type looks like this:
 
 ```elm
-
 type Trie a
     = Trie (Node a)
 
 
 type Node a
     = Node (Maybe a) (Dict Char (Node a))
-
 ```
 
 ## How fast is our approach?
