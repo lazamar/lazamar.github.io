@@ -1,6 +1,13 @@
 ---
 ---
 
+// Variables
+
+// When changing this color it is worth checking
+// the contrast ration in Chrome's web inspector
+// to get a good match.
+$link-colour: #8f413b; // #00645b; // #005aa2; //
+
 * {
     box-sizing: border-box;
 }
@@ -38,10 +45,15 @@ img {
 
 a {
     text-decoration: none;
-    // When changing this color it is worth checking
-    // the contrast ration in Chrome's web inspector
-    // to get a good match.
-    color: #8f413b; // #00645b; //#005aa2;
+    color: $link-colour;
+}
+
+blockquote {
+    padding: 0.5em 1em;
+    background: #eee;
+    border-left: 5px solid $link-colour;
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .muted {

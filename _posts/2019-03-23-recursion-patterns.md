@@ -5,19 +5,10 @@ title: Recursion Patterns - Getting rid of stack overflows
 
 In functional programming languages you may find yourself overflowing the stack. This post describes techniques to achieve unbounded recursion without fear of the stack.
 
-&nbsp;
-
----
-
-## TL;DR
-
-- The name of the game is *staying tail recursive*
-- Enable tail recursion by passing down computed values
-- Stick to one recursive call at a time by passing down a list of recursions to be done
-
----
-
-&nbsp;
+> TL;DR
+> - The name of the game is *staying tail recursive*
+> - Enable tail recursion by passing down computed values
+> - Stick to one recursive call at a time by passing down a list of recursions to be done
 
 If we reach a stack overflow it is because we are not taking advantage of tail recursion. The fix is: use tail recursion. How to do that, however, is not always very clear.
 
