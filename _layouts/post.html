@@ -2,14 +2,14 @@
 layout: default
 ---
 
-<h1>{{ page.title }}</h1>
+<small class="muted">
+    {{ page.date | date: "%B %e, %Y" }}
+</small>
+
+<h1 style="margin-top: 0;">{{ page.title }}</h1>
 
 <article>
-    <small class="muted">
-        {{ page.date | date: "%B %e, %Y" }}
-    </small>
-
     {{ content }}
 
-    <!--{% include disqus.html %}-->
+    {% include disqus.html %}
 </article>

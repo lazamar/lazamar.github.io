@@ -38,6 +38,10 @@ img {
 
 a {
     text-decoration: none;
+    // When changing this color it is worth checking
+    // the contrast ration in Chrome's web inspector
+    // to get a good match.
+    color: #8f413b; // #00645b; //#005aa2;
 }
 
 .muted {
@@ -48,3 +52,21 @@ a {
 // CSS ... Otherwise it really bloats up the top of the CSS file and makes it
 // difficult to find the start
 @import "highlights";
+
+code {
+    //font-family: monospace;
+}
+
+/* inline codes */
+code.highlighter-rouge {
+    border-radius: .2em;
+}
+
+.highlight {
+  white-space: pre;
+  overflow: auto;
+  word-wrap: normal; /* horizontal scrolling */
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+}
