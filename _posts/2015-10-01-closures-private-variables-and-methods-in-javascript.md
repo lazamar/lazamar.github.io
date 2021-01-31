@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Closures - Private Variables and Methods in JavaScript
+city: London, UK
 ---
 Some languages such as Java allow us to declare methods and variables in a class
 as private, restraining anything outside the class itself to access them.

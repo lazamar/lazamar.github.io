@@ -1,6 +1,7 @@
 ---
 layout: post
 title: SCSS - Extending Classes Within Media Queries
+city: London, UK
 ---
 If you have used SASS for some time you will know that if you are within a
 media query and try to extend a class that is outside of the media query

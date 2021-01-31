@@ -1,6 +1,7 @@
 ---
 layout: post
 title: My accidental Denial Of Service attack
+city: London, UK
 ---
 
 It was my most effective attack. Three companies went down. It was also accidental and with undesired consequences.

@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Searching and installing old versions of Nix packages
+city: London, UK
 ---
 
 TL;DR: There is no Nix-native way of doing that. In this post I describe the process that led to the creation of [Nix Package Versions](https://lazamar.co.uk/nix-versions), the tool that provides this functionality.
