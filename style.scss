@@ -53,20 +53,3 @@ a {
 // difficult to find the start
 @import "highlights";
 
-code {
-    //font-family: monospace;
-}
-
-/* inline codes */
-code.highlighter-rouge {
-    border-radius: .2em;
-}
-
-.highlight {
-  white-space: pre;
-  overflow: auto;
-  word-wrap: normal; /* horizontal scrolling */
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-}

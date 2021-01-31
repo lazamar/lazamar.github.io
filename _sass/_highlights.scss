@@ -31,6 +31,8 @@
   color: #C34E00;
 }
 
+// My customisations
+
 code {
   font-family: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
   font-size: 14px;
@@ -50,10 +52,13 @@ a code.highlighter-rouge {
 
 // Code blocks
 div.highlighter-rouge {
-    //border-radius: 0;
-    //border: 2px solid black;
-    //margin: 1.5em 0;
     background-color: whitesmoke;
     margin: 0;
     padding: 0 1em;
+    border-radius: 5px;
+
+    white-space: pre;
+    overflow: auto;
+    word-wrap: normal; /* horizontal scrolling */
 }
+
