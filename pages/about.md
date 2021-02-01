@@ -4,7 +4,10 @@ title: About
 permalink: /about/
 ---
 
-I'm a London based software developer who plays mainly with Haskell, Elm and JavaScript.
+I'm Marcelo Lazaroni, a London based software developer who plays mainly with Haskell.
+
+![Me and my wife, Sophia](/images/about-me.jpg)
+<small>Rainy day in Amsterdam with the wife</small>
 
 I'm [@marcelolaza](https://twitter.com/Marcelolaza) on Twitter.
 
