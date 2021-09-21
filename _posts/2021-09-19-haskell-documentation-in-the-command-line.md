@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Haskell documentation in the command line ⚡
+title: Browse Hackage from the terminal ⚡
 city: London, UK
 ---
 
