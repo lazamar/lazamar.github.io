@@ -63,7 +63,7 @@ There is no network delay in this demo because everything is cached. There is no
 
 <script id="asciicast-CcQz4S1iPPTydTX1AysfteEmr" src="https://asciinema.org/a/CcQz4S1iPPTydTX1AysfteEmr.js" async></script>
 
-All commands can be replaced by a prefix of the command, so instead of typing `:pinterface base` to view the intreface of the package, you can type just `pi base`.
+All commands can be replaced by a prefix of the command, so instead of typing `:pinterface base` to view the intreface of the package, you can type just `:pi base`.
 
 ## How about a local Hoogle?
 
