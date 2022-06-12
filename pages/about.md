@@ -17,13 +17,21 @@ Here are a couple of projects I am working on; contributions are very welcome.
 
 ## Projects
 
+### [Haskell Docs CLI](https://github.com/lazamar/haskell-docs-cli)
+
+Navigate Hackage documentation from the command line.
+
+[Read the blog post]({{site.baseurl}}/haskell-documentation-in-the-command-line/)
+
+[![haskell-docs-cli view of module documentation](../images/2021-09-19-module-documentation.png)]({{site.baseurl}}/haskell-documentation-in-the-command-line/)
+
 ### [Nix Package Versions](https://lazamar.co.uk/nix-versions/)
 
 Find all versions of a package that were available in a Nix channel and the revision you can download it from.
 
 [Read the blog post]({{site.baseurl}}/download-specific-package-version-with-nix/)
 
-![Nix Package Versions]({{ site.baseurl }}/images/about-nix-package-versions.png)
+[![Nix Package Versions]({{ site.baseurl }}/images/about-nix-package-versions.png)](https://lazamar.co.uk/nix-versions/)
 
 ### [Silver Magpie](https://lazamar.co.uk/silver-magpie/)
 
