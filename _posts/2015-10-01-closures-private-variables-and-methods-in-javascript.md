@@ -22,8 +22,8 @@ var myBankAccount = (function(){
 
   return{
     getBalance: function(){
-                  return balance
-                }
+      return balance
+    }
   }
 })()
 ```
@@ -84,20 +84,19 @@ var bankAccount = function(initialBalance){
 var marceloAccount = bankAccount(100);
 
 marceloAccount.deposit(10) // 110
-marceloAccount. withdraw(80) // true
-marceloAccount. withdraw(80) // false
+marceloAccount.withdraw(80) // true
+marceloAccount.withdraw(80) // false
 ```
 
 Here we did a couple of things differently. Now we are not declaring an anonymous
 function and calling it straight away, we are assigning the function to a variable
 and only then we invoke the function variable to create an instance of the bank
-account, which we assign to `karlAccount`. `bankAccount` returns an object with
+account, which we assign to `marceloAccount`. `bankAccount` returns an object with
 three properties: `getBalance`, which gives us the current balance; `deposit`,
 which adds to our balance; and `withdraw`, which takes money from the balance.
 
-That's where closures really shine. Here we were able to use a private function,
-`takeFromBalance`, to implement our specific rules to the way in which our
-private variable should be changed. In this case we are not allowing it to be negative.
+That's where closures really shine. Here we were able to use a private
+variable to ensure that the balance would never be negative.
 
 Closures are an excellent way to keep things tidy and working properly. With
 closures we can build code that is more secure and more robust as we are
