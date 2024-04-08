@@ -24,13 +24,13 @@ So what to do?
 
 What I really want is to look through older revisions and check what version of Neovim they have in the hope that they would have an older version of it. I could then tell Nix to install it from that old revision.
 
-A revision is nothing more than a big Nix expressions that describes all the packages available and how to build them. Nix revisions are kept at [NixOS/nixpkgs-channels](https://github.com/NixOS/nixpkgs-channels). If you change anything in a revision it becomes a different revision. This means that *each commit in the repository describes a different revision*.
+A revision is nothing more than a big Nix expressions that describes all the packages available and how to build them. Nix revisions are kept at [NixOS/nixpkgs](https://github.com/NixOS/nixpkgs). If you change anything in a revision it becomes a different revision. This means that *each commit in the repository describes a different revision*.
 
 Given that one commit is equal to one revision, to find a revision containing an older version of Neovim I can look through the git history of that repository searching for changes in the `version` field of the `neovim` derivation.
 
 Searching for *neovim* at <https://search.nixos.org/packages> I can see that the nix expression describing it lives at `pkgs/applications/editors/neovim/default.nix`.
 
-So I started by cloning `NixOS/nixpkgs-channels` and using `git rev-list` to find all commits that modify that file.
+So I started by cloning `NixOS/nixpkgs` and using `git rev-list` to find all commits that modify that file.
 
 ``` bash
 $ git rev-list nixos-unstable -- pkgs/applications/editors/neovim/default.nix
@@ -64,7 +64,7 @@ b4c7a0b7:pkgs/applications/editors/neovim/default.nix: version = "0.4.3";
 Success!! Now I can just choose the version of `neovim` I want and open a shell with it by specifying the revision's commit address on github.
 
 ``` bash
-$ nix-shell -p neovim -I nixpkgs=https://github.com/NixOS/nixpkgs-channels/archive/92a047a6c4d46a222e9c323ea85882d0a7a13af8.tar.gz
+$ nix-shell -p neovim -I nixpkgs=https://github.com/NixOS/nixpkgs/archive/92a047a6c4d46a222e9c323ea85882d0a7a13af8.tar.gz
 ```
 
 ## Automating
@@ -81,7 +81,7 @@ Even though this worked, it was not pleasant.
 
 I expected a good solution to be similar to the official Nix package search website. A page with one search box where you enter the package you are interested in and get a copy-pasteable command to install it. So I started with that as the goal.
 
-I initially thought of setting up a server with a clone of `nixpkgs-channels` that would perform this git search every time someone made a package query. It soon became obvious that this was too error-prone and would not scale.
+I initially thought of setting up a server with a clone of `nixpkgs` that would perform this git search every time someone made a package query. It soon became obvious that this was too error-prone and would not scale.
 
 I discovered that `nix-env -qaP --json` outputs a big json file containing information about all packages available in your default revision. You can specify a different revision by using the `-f` flag. Using this I could find out information about packages in any revision reliably. This command takes some time to complete, but I can save its result in a cache and query the cache instead.
 
