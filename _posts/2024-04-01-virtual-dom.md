@@ -172,7 +172,7 @@ function diffOne(l, r) {
   // First we deal with text nodes. If their text content is not
   // identical, then let's replace the old one for the new one.
   // Otherwise it's a `noop`, which means we do nothing.
-  let isText = l.text !== undefined;
+  const isText = l.text !== undefined;
   if (isText) {
     return l.text !== r.text
       ? { replace: r }
@@ -223,7 +223,7 @@ All elements in common should be diffed.
 
 ``` javascript
 function diffList(ls, rs) {
-  let length = Math.max(ls.length, rs.length);
+  const length = Math.max(ls.length, rs.length);
   return Array.from({ length })
     .map((_,i) =>
       (ls[i] === undefined)
@@ -251,10 +251,10 @@ The procedures to `create` and `modify` DOM nodes were moved to their own functi
 
 ``` javascript
 function apply(el, childrenDiff) {
-  let children = Array.from(el.childNodes);
+  const children = Array.from(el.childNodes);
 
   childrenDiff.forEach((diff, i) => {
-    let action = Object.keys(diff)[0];
+    const action = Object.keys(diff)[0];
     switch (action) {
       case "remove":
         children[i].remove();
@@ -265,13 +265,13 @@ function apply(el, childrenDiff) {
         break;
 
       case "create": {
-        let child = create(diff.create);
+        const child = create(diff.create);
         el.appendChild(child);
         break;
       }
 
       case "replace": {
-        let child = create(diff.replace);
+        const child = create(diff.replace);
         children[i].replaceWith(child);
         break;
       }
@@ -359,7 +359,7 @@ You should instead do `element["checked"] = true`. And that will work.
 And how do we know which to use? Well, it is complicated. I just compiled a list based on [what Elm's Html library is doing](https://github.com/elm/html/blob/master/src/Html/Attributes.elm). Here is the result:
 
 ``` javascript
-let props = new Set([ "autoplay", "checked", "checked", "contentEditable", "controls",
+const props = new Set([ "autoplay", "checked", "checked", "contentEditable", "controls",
   "default", "hidden", "loop", "selected", "spellcheck", "value", "id", "title",
   "accessKey", "dir", "dropzone", "lang", "src", "alt", "preload", "poster",
   "kind", "label", "srclang", "sandbox", "srcdoc", "type", "value", "accept",
@@ -384,21 +384,20 @@ With all of that in our hands we can now have a go at creating a real DOM node f
 
 ``` javascript
 function create(vnode) {
-
    // Create a text node
   if (vnode.text !== undefined) {
-    let el = document.createTextNode(vnode.text);
+    const el = document.createTextNode(vnode.text);
     return el;
   }
 
   // Create the DOM element with the correct tag and
   // already add our object of listeners to it.
-  let el = document.createElement(vnode.tag);
+  const el = document.createElement(vnode.tag);
   el._ui = { listeners : {} };
 
   for (const prop in vnode.properties) {
-    let event = eventName(prop);
-    let value = vnode.properties[prop];
+    const event = eventName(prop);
+    const value = vnode.properties[prop];
     // If it's an event set it otherwise set the value as a property.
     (event !== null)
       ? setListener(el, event, value)
@@ -406,7 +405,7 @@ function create(vnode) {
   }
 
   // Recursively create all the children and append one by one.
-  for (let childVNode of vnode.children) {
+  for (const childVNode of vnode.children) {
     const child = create(childVNode);
     el.appendChild(child);
   }
@@ -421,7 +420,6 @@ Notice the corecursion between `modify` and `apply`.
 
 ``` javascript
 function modify(el, diff) {
-
   // Remove props
   for (const prop of diff.remove) {
     const event = eventName(prop);
