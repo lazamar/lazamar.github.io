@@ -6,7 +6,7 @@ city: Póvoa de Varzim, Portugal
 
 In this post I'll walk through the implementation of a Virtual DOM in a bit over 200 lines of JavaScript.
 
-The result is fully functional (TodoMVC) and sufficiently performant (updating 10k nodes at 60fps).
+The result is full-featured (TodoMVC) and sufficiently performant (updating 10k nodes at 60fps).
 It's available on NPM as the [smvc](https://github.com/lazamar/smvc) library.
 
 The main goal is to illustrate the fundamental technique behind tools like React.
@@ -46,21 +46,21 @@ They will tell us how the entire page should look like by using virtual nodes.
 Then our library will take care of modifying the real DOM to make it conform to our representation of it.
 
 To know what to modify, our library will take the virtual DOM created by the user and compare it to the
-virtual DOM representing how the page currently looks like. This process is called diffing.
+virtual DOM representing how the page currently looks like. This process is called *diffing*.
 It will take note of the differences such as which elements should be added or removed and which properties
-should be added or removed. The output of diffing is a virtual DOM diff.
+should be added or removed. The output of diffing is a virtual DOM *diff*.
 
-Then we will apply the changes from that diff to the real DOM. Once we are with the modifications, the
-virtual DOM created by the user has now become the current faithful representation of the real DOM.
+Then we will *apply* the changes from that diff to the real DOM. Once we are done with the modifications,
+the virtual DOM created by the user has now become the current faithful representation of the real DOM.
 
 So, for the UI part of things we need to:
 
-1. Create a virtual representation of the DOM
-2. Diff virtual DOM nodes
-3. Apply a virtual DOM diff to an HTML element
+1. *Create* a virtual representation of the DOM
+2. *Diff* virtual DOM nodes
+3. *Apply* a virtual DOM diff to an HTML element
 
 After building that we will see how to put such virtual DOM to good use
-by adding powerful state handling in just a few lines of code.
+as a powerful library by adding state handling in just a few lines of code.
 
 ## Representing the DOM
 
@@ -167,11 +167,11 @@ Now let's dive right in and implement this `diff` function.
 
 ``` javascript
 
-// It takes two nodes to be compared, and old and a new one.
+// It takes two nodes to be compared, an old and a new one.
 function diffOne(l, r) {
   // First we deal with text nodes. If their text content is not
   // identical, then let's replace the old one for the new one.
-  // Otherwise it's a `noop`, that is we do nothing.
+  // Otherwise it's a `noop`, which means we do nothing.
   let isText = l.text !== undefined;
   if (isText) {
     return l.text !== r.text
@@ -217,24 +217,21 @@ function diffOne(l, r) {
 As an optimisation we can notice when there are no property changes and all children modifications are noops so that we can make the element's diff a `noop` too.
 ([like this](https://github.com/lazamar/smvc/blob/8d8b3a0368deeb400d595542a19ed9d6b578807d/smvc.js#L99-L107))
 
-Diffing the list of children is straightforward enough. We create a list of diffs the size of the longest of two lists being compared.
+Diffing the list of children is straightforward enough. We create a list of diffs the size of the longest of the two lists being compared.
 If the old one is longer, the extra elements should be removed. If the new one is longer, the extra elements should be created.
 All elements in common should be diffed.
 
 ``` javascript
 function diffList(ls, rs) {
-  let len = Math.max(ls.length, rs.length);
-  let diffs = [];
-  for (let i = 0; i < len; i++) {
-    diffs.push(
+  let length = Math.max(ls.length, rs.length);
+  return Array.from({ length })
+    .map((_,i) =>
       (ls[i] === undefined)
       ? { create: rs[i] }
       : (rs[i] == undefined)
       ? { remove: true }
       : diffOne(ls[i], rs[i])
     );
-  }
-  return diffs;
 }
 ```
 
@@ -242,12 +239,12 @@ And that's diffing done!
 
 ## Applying a diff
 
-We can create a virtual DOM, and diff it. Now it's time to apply the diff to the real DOM.
+We can already create a virtual DOM and diff it. Now it's time to apply the diff to the real DOM.
 
-The `apply` function will take as input a real DOM node which should be affected and an
-array of the diffs created in the previous step. They are the diffs of this node's children.
+The `apply` function will take as inputs a real DOM node whose children should be affected and an
+array of the diffs created in the previous step. The diffs of this node's children.
 
-`apply` will have no meaningful return value as its main function is to perform the side effect of modifying the DOM.
+`apply` will have no meaningful return value as its main purpose is to perform the side effect of modifying the DOM.
 
 Its implementation is pretty simple, just dispatching the appropriate action to be performed for each child.
 The procedures to `create` and `modify` DOM nodes were moved to their own functions.
@@ -293,8 +290,7 @@ Before tackling creation and modification, let's think about how we would like t
 We want it to be very cheap and easy to add and remove event listeners, and we want to be sure that we never leave any dangling listeners around.
 
 We will also enforce the invariant that for any given node each event should only have a single listener.
-This will already be the case with our API given even listeners are listed in the properties object and
-JavaScript objects cannot have duplicate keys.
+This will already be the case with our API given event listeners are specified using keys in the properties object and JavaScript objects cannot have duplicate keys.
 
 Here is an idea. We add to DOM object nodes a special property created by our
 library which contains an object where all the user defined event listeners for
@@ -360,7 +356,7 @@ For some things we should use the `setAttribute` function and for others we shou
 For example. If you have an `<input type="checkbox">` and call `element.setAttribute("checked", true)` on it, it will not become checked 🙃.
 You should instead do `element["checked"] = true`. And that will work.
 
-And how do we know which to use? Well, it is complicated. I just created a list based on [what Elm's Html library is doing](https://github.com/elm/html/blob/master/src/Html/Attributes.elm). Here is the result:
+And how do we know which to use? Well, it is complicated. I just compiled a list based on [what Elm's Html library is doing](https://github.com/elm/html/blob/master/src/Html/Attributes.elm). Here is the result:
 
 ``` javascript
 let props = new Set([ "autoplay", "checked", "checked", "contentEditable", "controls",
@@ -384,7 +380,7 @@ function setProperty(prop, value, el) {
 
 ### Creating and modifying
 
-With all of that in our hands we can now have a go at creating DOM nodes from a virtual DOM one.
+With all of that in our hands we can now have a go at creating a real DOM node from a virtual DOM one.
 
 ``` javascript
 function create(vnode) {
@@ -420,7 +416,8 @@ function create(vnode) {
 ```
 
 The `modify` function is similarly straightforward. It sets and removes the approriate
-properties of the node and hands control to the `apply` function, for it to change the children.
+properties of the node and hands control to the `apply` function for it to change the children.
+Notice the corecursion between `modify` and `apply`.
 
 ``` javascript
 function modify(el, diff) {
@@ -450,3 +447,4 @@ function modify(el, diff) {
 }
 ```
 
+## Handling state
