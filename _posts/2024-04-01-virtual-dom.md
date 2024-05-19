@@ -4,6 +4,8 @@ title: A virtual DOM in 200 lines of JavaScript
 city: Póvoa de Varzim, Portugal
 ---
 
+<script src="/assets/virtual-dom/smvc.js"></script>
+
 In this post I'll walk through the full implementation of a Virtual DOM in a bit over 200 lines of JavaScript.
 
 The result is a full-featured (TodoMVC) and sufficiently performant (updating 10k nodes at 60fps) Virtual DOM library.
@@ -472,21 +474,58 @@ The user provides these two functions at the start of the program and the VDOM l
 We also need to give users a way to emit messages to be handled via the `update` function.
 We will do that by providing an `enqueue` function, which adds a message to a queue of messages to be dealt with.
 
-The final bits we need from the user are an initial state to get started with and an html node inside of which the VDOM should be rendered.
+The final bits we need from the user are an initial state to get started with and an HTML node inside of which the VDOM should be rendered.
 
 And with these final pieces we have our complete API.
 We define a function called `init` which will take all the required input from the user and get the application started.
 It will return the `enqueue` function for that application.
 This design allows us to have multiple VDOM applications running in the same page and each will have its own `enqueue` function.
 
+Here is a counter implemented with this design:
+
+<div
+    class="sample-1"
+    style="background-color: antiquewhite; margin: 1em 0; padding: 1em "
+></div>
+<script>
+{
+    const { h, text, init } = SMVC;
+
+    function view(state) {
+        return [
+            h("span", {}, [ text(`Counter: ${state.counter}`) ])
+        ];
+    }
+
+    function update(state, msg) {
+        return { counter : state.counter + msg }
+    }
+
+    const initialState = { counter: 0 };
+
+    const root = document.querySelector(".sample-1");
+
+    // Start application
+    const { enqueue } = init(root, initialState, update, view);
+
+    // Increase the counter by one every second.
+    setInterval(() => enqueue(1), 1000);
+}
+</script>
+
 ``` javascript
 function view(state) {
-    return h("p", {}, [ text(`Counter: ${state.counter}`) ])
+    return [
+        h("p", {}, [ text(`Counter: ${state.counter}`) ])
+    ];
 }
+
 function update(state, msg) {
     return { counter : state.counter + msg }
 }
+
 const initialState = { counter: 0 };
+
 const root = document.querySelector(".my-application");
 
 // Start application
@@ -495,8 +534,6 @@ const { enqueue } = init(root, initialState, update, view);
 // Increase the counter by one every second.
 setInterval(() => enqueue(1), 1000);
 ```
-
-<!-- TODO: add this application inline here -->
 
 ### Init function
 
@@ -582,7 +619,7 @@ With that, event handling could look like this:
 const button = h(
     "button",
     { onClick : (_event, enqueue) => { enqueue(1) } },
-    "Increase counter"
+    [text("Increase counter")]
 );
 ```
 
@@ -593,9 +630,41 @@ That would allow the button above to be written as:
 const button = h(
     "button",
     { onClick : () => 1 },
-    "Increase counter"
+    [text("Increase counter")]
 );
 ```
+
+<div
+    class="sample-2"
+    style="background-color: antiquewhite; margin: 1em 0; padding: 1em "
+></div>
+<script>
+{
+    const { h, text, init } = SMVC;
+
+    function view(state) {
+        return [
+            h(
+                "button",
+                { onClick : () => 1, style: "font-size: 1em" },
+                [ text("Increase counter") ]
+            ),
+            h("span", { style: "margin: 1em" }, [text(`Counter: ${state.counter}`)]),
+        ];
+    }
+
+    function update(state, msg) {
+        return { counter : state.counter + msg }
+    }
+
+    const initialState = { counter: 0 };
+
+    const root = document.querySelector(".sample-2");
+
+    // Start application
+    const { enqueue } = init(root, initialState, update, view);
+}
+</script>
 
 Cool, how can we implement that? Our single `listener` function which dispatches the events will need access to `enqueue`.
 The easiest way to pass it is through the `_ui` object which already holds the user-defined listeners.
