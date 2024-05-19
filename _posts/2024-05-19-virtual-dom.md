@@ -13,7 +13,7 @@ city: Póvoa de Varzim, Portugal 🇵🇹
 
 In this post I'll walk through the full implementation of a Virtual DOM in a bit over 200 lines of JavaScript.
 
-The result is a full-featured (TodoMVC) and sufficiently performant (updating 10k nodes at 60fps) Virtual DOM library.
+The result is a full-featured and sufficiently performant virtual DOM library ([demos](#demos)).
 It's available on NPM as the [smvc](https://github.com/lazamar/smvc) package.
 
 The main goal is to illustrate the fundamental technique behind tools like React.
