@@ -4,6 +4,11 @@ title: A virtual DOM in 200 lines of JavaScript
 city: Póvoa de Varzim, Portugal
 ---
 
+<img
+    src="/images/virtual-dom.svg"
+    alt="Image from opendoodles.com"
+    style="width: 500px; display: block; margin: auto;"
+/>
 <script src="/assets/virtual-dom/smvc.js"></script>
 
 In this post I'll walk through the full implementation of a Virtual DOM in a bit over 200 lines of JavaScript.
@@ -19,7 +24,7 @@ worry about adding/removing elements to get there.
 They do that through a Virtual DOM.
 
 
-## The goal of a Virtual DOM
+## The goal of a virtual DOM
 
 It's not about performance.
 

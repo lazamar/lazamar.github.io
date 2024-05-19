@@ -117,7 +117,6 @@ function viewInput(value) {
     h("input",
       { class : "new-todo",
         placeholder: "what needs to be done?",
-        autofocus: "true",
         value: value,
         name: "newTodo",
         onInput: e => ({ UpdateField : e.target.value }),

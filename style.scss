@@ -16,6 +16,15 @@ html {
     font-family: system-ui,sans-serif;
     line-height: 1.6;
     font-size: 1rem;
+    min-height: 100%;
+    border: 15px solid black;
+}
+
+@media (max-width: 780px) {
+    html {
+        border-width: 5px;
+    }
+
 }
 
 .blog-nav, .blog-main, .blog-footer {
@@ -25,7 +34,7 @@ html {
 }
 
 .blog-nav {
-    border-bottom: 1px solid #a2a2a2;
+    border-bottom: 2px solid black;
 }
 
 .blog-footer {
