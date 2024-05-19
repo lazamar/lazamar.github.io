@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Dispatching from inside a reducer in Redux
-city: London, UK
+city: London, UK 🇬🇧
 ---
 
 Redux is just great, but to be fair there isn't an elegant way to perform asynchronous actions on it.

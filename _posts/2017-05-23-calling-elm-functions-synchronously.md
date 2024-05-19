@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Calling Elm functions synchronously from JavaScript
-city: London, UK
+city: London, UK 🇬🇧
 ---
 
 > Update: This only works for 0.18. It does not work for newer Elm versions.

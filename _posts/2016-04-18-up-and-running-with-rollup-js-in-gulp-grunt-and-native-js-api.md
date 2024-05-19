@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Setting up Rollup.js with Babel in Grunt, Gulp and the JS API
-city: London, UK
+city: London, UK 🇬🇧
 ---
 
 Rollup.js is a nice bundler that gets all of your dependencies and packs them

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Intercepting HTTP requests in tests with Jasmine
-city: London, UK
+city: London, UK 🇬🇧
 ---
 
 Forget about setting up test servers for unit testing. Give a custom response to

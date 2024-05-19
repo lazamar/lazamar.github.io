@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Running a Raspberry Pi with an HDMI adapter.
-city: London, UK
+city: London, UK 🇬🇧
 ---
 Well, that seems pretty trivial, right? You just connect the adapter and it
 should just work. Well, it should, but it doesn't.

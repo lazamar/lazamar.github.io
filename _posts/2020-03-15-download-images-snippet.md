@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Download images from a page
-city: London, UK
+city: London, UK 🇬🇧
 ---
 
 Often I need to download many images from a web page and end up trying and adjusting far too many snippets from Stack Overflow.

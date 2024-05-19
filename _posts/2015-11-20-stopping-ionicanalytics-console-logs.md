@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Stopping $ionicAnalytics Annoying Console Logs
-city: London, UK
+city: London, UK 🇬🇧
 ---
 
 Ionic provides a very nice system for you to track the usage of your app with the $ionicAnalytics plugin. But if you are reading this you probably already know that, so let's get to the heart of the matter.

@@ -1,12 +1,12 @@
 ---
 layout: post
 title: A virtual DOM in 200 lines of JavaScript
-city: Póvoa de Varzim, Portugal
+city: Póvoa de Varzim, Portugal 🇵🇹
 ---
 
 <img
     src="/images/virtual-dom.svg"
-    alt="Image from opendoodles.com"
+    title="Illustration from opendoodles.com"
     style="width: 500px; display: block; margin: auto;"
 />
 <script src="/assets/virtual-dom/smvc.js"></script>

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Device Specific Fonts in Ionic
-city: London, UK
+city: London, UK 🇬🇧
 ---
 
 Building apps that have appropriate looks on iPhone and Android is a breeze with Ionic.

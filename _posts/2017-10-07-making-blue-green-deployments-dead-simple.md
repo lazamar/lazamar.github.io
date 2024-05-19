@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Zero downtime - Making Blue-Green deployments dead simple
-city: London, UK
+city: London, UK 🇬🇧
 ---
 
 At the current state of web technologies, having our application be unavailable during every upgrade is not acceptable anymore. And if you are updating your application often, which you should, being available during updates is even more important. In this post I will walk you through hot-swapping docker containers without letting any request drop with just one command.

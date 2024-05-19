@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Deploying statically-linked Haskell to Lambda
-city: Lausanne, Switzerland
+city: Lausanne, Switzerland 🇨🇭
 ---
 
 In [his post about a Telegram bot](https://www.joachim-breitner.de/blog/770-A_Telegram_bot_in_Haskell_on_Amazon_Lambda)

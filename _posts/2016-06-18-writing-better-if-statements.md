@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Writing Better If Statements
-city: London, UK
+city: London, UK 🇬🇧
 ---
 
 We all know how important code comments are, but we all aim for that marvellous holy grail of coding: the self documenting code. That is, code that does not need comments, you can read it like a book.

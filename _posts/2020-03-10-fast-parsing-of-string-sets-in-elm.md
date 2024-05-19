@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Fast parsing of String Sets in Elm
-city: London, UK
+city: London, UK 🇬🇧
 ---
 
 Imagine you want to write a parser to match any of a set of strings that you know beforehand.

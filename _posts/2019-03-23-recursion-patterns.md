@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Recursion Patterns - Getting rid of stack overflows
-city: London, UK
+city: London, UK 🇬🇧
 ---
 
 In functional programming languages you may find yourself overflowing the stack. This post describes techniques to achieve unbounded recursion without fear of the stack.

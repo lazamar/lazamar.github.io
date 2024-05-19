@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Browse Hackage from the terminal ⚡
-city: London, UK
+city: London, UK 🇬🇧
 ---
 
 The Haskell ecosystem has great facilities for searching and navigating package documentation using the browser. [`haskell-docs-cli`](https://github.com/lazamar/haskell-docs-cli) allows you to do that much faster without leaving the terminal.
