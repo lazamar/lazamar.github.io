@@ -4,10 +4,10 @@ title: A virtual DOM in 200 lines of JavaScript
 city: Póvoa de Varzim, Portugal
 ---
 
-In this post I'll walk through the implementation of a Virtual DOM in a bit over 200 lines of JavaScript.
+In this post I'll walk through the full implementation of a Virtual DOM in a bit over 200 lines of JavaScript.
 
-The result is full-featured (TodoMVC) and sufficiently performant (updating 10k nodes at 60fps).
-It's available on NPM as the [smvc](https://github.com/lazamar/smvc) library.
+The result is a full-featured (TodoMVC) and sufficiently performant (updating 10k nodes at 60fps) Virtual DOM library.
+It's available on NPM as the [smvc](https://github.com/lazamar/smvc) package.
 
 The main goal is to illustrate the fundamental technique behind tools like React.
 
@@ -446,3 +446,118 @@ function modify(el, diff) {
 ```
 
 ## Handling state
+
+We now have a full virtual DOM rendering implementation.
+Using `h` and `text` we can create a VDOM and using `apply` and `diffList` we can materialise it into the real DOM and update it.
+
+We could stop here, but I think the implementation is not complete without a structured way to handle state changes.
+Aterall the whole point of a virtual DOM is that you repeatedly recreate it when your state changes.
+
+### The API
+
+We will implement a very straightforward way to go about it. There will be two types of user-defined values:
+
+* The applications state: a value which contains all the information required to render the VDOM.
+* Application messages: values that contain information about how the state should be changed.
+
+We will ask the user to implement two functions:
+
+* The `view` function takes the application state and returns a VDOM.
+* The `update` function takes the application state and one application message and returns a new application state.
+
+This is enough to build any complex application.
+
+The user provides these two functions at the start of the program and the VDOM library will control when they are called. The user never calls them directly.
+
+We also need to give users a way to emit messages to be handled via the `update` function.
+We will do that by providing an `enqueue` function, which adds a message to a queue of messages to be dealt with.
+
+The final bits we need from the user are an initial state to get started with and an html node inside of which the VDOM should be rendered.
+
+And with these final pieces we have our complete API.
+We define a function called `init` which will take all the required input from the user and get the application started.
+It will return the `enqueue` function for that application.
+This design allows us to have multiple VDOM applications running in the same page and each will have its own `enqueue` function.
+
+``` javascript
+function view(state) {
+    return h("p", {}, [ text(`Counter: ${state.counter}`) ])
+}
+function update(state, msg) {
+    return { counter : state.counter + msg }
+}
+const initialState = { counter: 0 };
+const root = document.querySelector(".my-application");
+
+// Start application
+const { enqueue } = init(root, initialState, update, view);
+
+// Increase the counter by one every second.
+setInterval(() => enqueue(1), 1000);
+```
+
+<!-- TODO: add this application inline here -->
+
+### Init function
+
+With the API fleshed out, let's think about how this `init` function should work.
+
+We will definitely call `update` once for every message.
+But we don't need to call `view` every time the state changes as that might cause us to update the DOM more often than the browser is able to display DOM updates.
+We want to call `view` at most once per animation frame.
+
+Also, we want users to be able to call `enqueue` as many times as they want and from wherever they want without it causing our application to break.
+This means that we should accept `enqueue` to be called even from within the `update` function.
+
+We will do that by decoupling message queuing, updating the state, and updating the DOM.
+
+Calls to `enqueue` will just add the message to an array.
+Then, on every animation frame we will take all the messages currently queued and process them by calling `update` on each.
+Once all messages have been processed we will render the resulting state using the `view` function.
+
+Running the application now consists of just repeating this process on every animation frame.
+
+``` javascript
+// Start managing the contents of an HTML element.
+function init(root, initialState, update, view) {
+  let state = initialState; // client application state
+  let nodes = []; // virtual DOM nodes
+  let queue = []; // msg queue
+
+  function enqueue(msg) {
+    queue.push(msg);
+  }
+
+  // draws the current state
+  function draw() {
+    let newNodes = view(state);
+    apply(root, enqueue, diffList(nodes, newNodes));
+    nodes = newNodes;
+  }
+
+  function updateState() {
+    if (queue.length > 0) {
+      let msgs = queue;
+      // replace queue with an empty array so that we don't process
+      // newly queued messages on this round.
+      queue = [];
+
+      for (msg of msgs) {
+        state = update(state, msg, enqueue);
+      }
+
+      draw();
+    }
+
+    // schedule next round of state updates
+    window.requestAnimationFrame(updateState);
+  }
+
+  draw();         // draw initial state
+  updateState();  // kick-off state update cycle
+
+  return { enqueue };
+}
+```
+
+### Convenience
