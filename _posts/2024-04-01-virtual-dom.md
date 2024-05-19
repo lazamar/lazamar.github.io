@@ -512,7 +512,7 @@ This means that we should accept `enqueue` to be called even from within the `up
 We will do that by decoupling message queuing, updating the state, and updating the DOM.
 
 Calls to `enqueue` will just add the message to an array.
-Then, on every animation frame we will take all the messages currently queued and process them by calling `update` on each.
+Then, on every animation frame we will take all queued messages and process them by calling `update` on each.
 Once all messages have been processed we will render the resulting state using the `view` function.
 
 Running the application now consists of just repeating this process on every animation frame.
@@ -531,7 +531,7 @@ function init(root, initialState, update, view) {
   // draws the current state
   function draw() {
     let newNodes = view(state);
-    apply(root, enqueue, diffList(nodes, newNodes));
+    apply(root, diffList(nodes, newNodes));
     nodes = newNodes;
   }
 
@@ -543,7 +543,7 @@ function init(root, initialState, update, view) {
       queue = [];
 
       for (msg of msgs) {
-        state = update(state, msg, enqueue);
+        state = update(state, msg);
       }
 
       draw();
@@ -559,5 +559,67 @@ function init(root, initialState, update, view) {
   return { enqueue };
 }
 ```
-
 ### Convenience
+
+Our users can call `enqueue` from anywhere they want, but currently it is a bit cumbersome to call it from within the `update` and `view` functions.
+This is so because `enqueue` is returned by `init`, which expects `update` and `view` to already be defined.
+
+Let's first improve that by passing `enqueue` as the third argument to `update`. Now our state update looks like this:
+
+``` javascript
+state = update(state, msg, enqueue)
+```
+
+Easy enough. Now let's think about how to improve the situation in the `view` function.
+
+Users won't be calling `enqueue` during rendering.
+They will call it in response to some event like `onClick` or `onInput`.
+So it makes sense for the user-created handling function for those events to receive `enqueue` as an argument, together with the event object.
+
+With that, event handling could look like this:
+
+``` javascript
+const button = h(
+    "button",
+    { onClick : (_event, enqueue) => { enqueue(1) } },
+    "Increase counter"
+);
+```
+
+We could make it even easier by making any value returned by the event handler that is different from `undefined` to be treated as a message.
+That would allow the button above to be written as:
+
+``` javascript
+const button = h(
+    "button",
+    { onClick : () => 1 },
+    "Increase counter"
+);
+```
+
+Cool, how can we implement that? Our single `listener` function which dispatches the events will need access to `enqueue`.
+The easiest way to pass it is through the `_ui` object which already holds the user-defined listeners.
+
+With that, our `listener` implementation becomes:
+
+``` javascript
+function listener(event) {
+  const el = event.currentTarget;
+  const handler = el._ui.listeners[event.type];
+  const enqueue = el._ui.enqueue;
+  const msg = handler(event);
+  if (msg !== undefined) {
+    enqueue(msg);
+  }
+}
+```
+
+To add `enqueue` to `_ui` at node creation time we will need to pass it through `apply` `modify` and `create`.
+
+``` javascript
+function apply(el, enqueue, childrenDiff) { ... }
+function modify(el, enqueue, diff) { ... }
+function create(enqueue, vnode) { ... }
+```
+
+With that in place, our full library is now complete! You can see the full code [here](https://github.com/lazamar/smvc/blob/main/smvc.js).
