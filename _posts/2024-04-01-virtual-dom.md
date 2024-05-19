@@ -19,11 +19,11 @@ worry about adding/removing elements to get there.
 They do that through a Virtual DOM.
 
 
-## The goal of the Virtual DOM
+## The goal of a Virtual DOM
 
 It's not about performance.
 
-The Virtual DOM is an abstraction to simplify the act of modifying a UI.
+A Virtual DOM is an abstraction to simplify the act of modifying a UI.
 
 You describe how you would like your page to look like and the library takes care of taking the DOM
 from its current state, to the state you want it to be in.
@@ -692,3 +692,20 @@ function create(enqueue, vnode) { ... }
 ```
 
 With that in place, our full library is now complete! You can see the full code [here](https://github.com/lazamar/smvc/blob/main/smvc.js).
+
+## Demos
+
+### Todo MVC
+
+Below is an implementation of the famous [TodoMVC](https://todomvc.com/) app running on the library we just wrote above.
+[Full source](https://github.com/lazamar/smvc/blob/main/demos/todoMVC.js).
+
+<div id="todomvc"></div>
+<link rel="stylesheet" href="/assets/virtual-dom/todoMVC.css"/>
+<script src="/assets/virtual-dom/todoMVC.js"></script>
+
+### 1 Million nodes
+
+For something that pushed the limits a bit here is a link to a page rendering a virtualised
+list containing [1 million HTML elements](https://lazamar.github.io/smvc/demos/million.html)
+and updating at hopefully 60 frames per second. [Full Source](https://github.com/lazamar/smvc/blob/main/demos/million.js)

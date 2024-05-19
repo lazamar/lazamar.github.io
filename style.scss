@@ -18,17 +18,17 @@ html {
     font-size: 1rem;
 }
 
-nav, main, footer {
+.blog-nav, .blog-main, .blog-footer {
     max-width: 750px;
     margin: auto;
     padding: 1em;
 }
 
-nav {
+.blog-nav {
     border-bottom: 1px solid #a2a2a2;
 }
 
-footer {
+.blog-footer {
     border-top: 1px solid #a2a2a2;
     display: flex;
     flex-wrap: wrap;

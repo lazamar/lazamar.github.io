@@ -1,3 +1,4 @@
+{
 const { init, h, text } = SMVC;
 
 const emit = v => _ => v;
@@ -249,3 +250,4 @@ const initialState = {
   uid: 0,
 };
 init(root, initialState, update, view);
+}
