@@ -117,7 +117,7 @@ function view(state) {
   const maxFreq = histogram.reduce((acc, v) => Math.max(acc, v.freq), 0);
 
   return [
-    h("label", {}, [ text("White your content") ]),
+    h("label", {}, [ text("Write your content") ]),
     h(
       "textarea",
       { style: `
@@ -132,70 +132,72 @@ function view(state) {
     h("p", {}, [ text(`Original size: ${originalBytes} bytes`)]),
     h("p", {}, [ text(`Compressed size: ${compressedBytes} bytes`)]),
     h("p", {}, [ text(`Compression: ${compressionPercentage}%`)]),
-    h("p", {}, [ text("Content:")]),
-    h("pre", { style: "word-wrap: break-word; text-wrap: wrap" },
-      state.content.split("").map(char =>
-        h("span",
-          { class: state.highlighted === char ? "highlighted" : "",
-            onMouseOver: () => ({ setHighlighted: char })
-          },
-          [text(char)]
+    h("div", { onMouseLeave: () => ({ setHighlighted: null }) }, [
+      h("p", {}, [ text("Content:")]),
+      h("pre", { style: "word-wrap: break-word; text-wrap: wrap" },
+        state.content.split("").map(char =>
+          h("span",
+            { class: state.highlighted === char ? "highlighted" : "",
+              onMouseOver: () => ({ setHighlighted: char })
+            },
+            [text(char)]
+          )
         )
-      )
-    ),
-    h("p", {}, [ text("Encoded:")]),
-    h( "div",
-      { class: "h-encoded" },
-      encodedWithDetails.map(({ offset, code, char }) => {
-        const withSpaces = code.split("").flatMap((char, ix) => {
-          const isByteBoundary = (ix + offset) % 8 === 0;
-          return isByteBoundary ? (" " + char) : char;
-        }).join("");
-        return h(
-          "span",
-          { class: state.highlighted === char ? "highlighted" : "",
-            onMouseOver: () => ({ setHighlighted: char })
-          },
-          [text(withSpaces)]
-        )
-      })
-    ),
-    h("p", {}, [ text("Code words:")]),
-    h("table", { class: "h-table" },
-      [ h("tr", {}, [
-          h("th", {}, [text("Character")]),
-          h("th", {}, [text("Occurrences")]),
-          h("th", {}, [text("Code word")]),
-        ])
-      ].concat(histogram.map(({ char, freq, code }) => {
-          const charName = char == " "
-            ? "<space>"
-            : char == "\n"
-            ? "<newline>"
-            : char;
-
-          return h("tr", {
-            style : "font-family: monospace",
-            class : char == state.highlighted ? "highlighted" : "",
-            onMouseOver: () => ({ setHighlighted: char })
-          }, [
-            h("td", {}, [text(charName)]),
-            h("td", { style: "position: relative" }, [
-              text(freq),
-              h("div", { style: `
-                width: ${100 * (freq / maxFreq)}%;
-                height: 100%;
-                position: absolute;
-                top: 0;
-                left: 0;
-                background-color: #2e9fff59;
-                ` }, [])
-            ]),
-            h("td", {}, [text(code)]),
-          ]);
+      ),
+      h("p", {}, [ text("Encoded:")]),
+      h( "div",
+        { class: "h-encoded" },
+        encodedWithDetails.map(({ offset, code, char }) => {
+          const withSpaces = code.split("").flatMap((char, ix) => {
+            const isByteBoundary = (ix + offset) % 8 === 0;
+            return isByteBoundary ? (" " + char) : char;
+          }).join("");
+          return h(
+            "span",
+            { class: state.highlighted === char ? "highlighted" : "",
+              onMouseOver: () => ({ setHighlighted: char })
+            },
+            [text(withSpaces)]
+          )
         })
+      ),
+      h("p", {}, [ text("Code words:")]),
+      h("table", { class: "h-table" },
+        [ h("tr", {}, [
+            h("th", {}, [text("Character")]),
+            h("th", {}, [text("Occurrences")]),
+            h("th", {}, [text("Code word")]),
+          ])
+        ].concat(histogram.map(({ char, freq, code }) => {
+            const charName = char == " "
+              ? "<space>"
+              : char == "\n"
+              ? "<newline>"
+              : char;
+
+            return h("tr", {
+              style : "font-family: monospace",
+              class : char == state.highlighted ? "highlighted" : "",
+              onMouseOver: () => ({ setHighlighted: char })
+            }, [
+              h("td", {}, [text(charName)]),
+              h("td", { style: "position: relative" }, [
+                text(freq),
+                h("div", { style: `
+                  width: ${100 * (freq / maxFreq)}%;
+                  height: 100%;
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  background-color: #2e9fff59;
+                  ` }, [])
+              ]),
+              h("td", {}, [text(code)]),
+            ]);
+          })
+        )
       )
-    )
+    ])
   ];
 }
 
