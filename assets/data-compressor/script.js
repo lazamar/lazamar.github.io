@@ -81,6 +81,11 @@ function update(state, msg) {
   }
 }
 
+// size in bytes of a string
+function stringBytes(str) {
+ return (new TextEncoder().encode(str)).length
+}
+
 function view(state) {
   const freqs = countFreq(state.content);
   const codes = buildCodes(buildHTree(freqs));
@@ -98,8 +103,12 @@ function view(state) {
     { offset: 0, acc: [] }
   ).acc;
 
-  const compressedBytes = Math.ceil(encoded.join("").length / 8);
-  const originalBytes = (new TextEncoder().encode(state.content)).length
+  const encodedBytes = Math.ceil(encoded.map(v => v.length).reduce((x,y) => x + y, 0) / 8);
+  const freqTableBytes = [...freqs.keys()]
+      .map(k => stringBytes(k) + 4)
+      .reduce((acc, x) => acc + x, 0);
+  const compressedBytes =  freqTableBytes + encodedBytes;
+  const originalBytes = stringBytes(state.content);
   const compressionPercentage =
     originalBytes == 0
     ? 0
@@ -130,7 +139,9 @@ function view(state) {
       []
     ),
     h("p", {}, [ text(`Original size: ${originalBytes} bytes`)]),
-    h("p", {}, [ text(`Compressed size: ${compressedBytes} bytes`)]),
+    h("p", {}, [ text(`Freqency table size: ${freqTableBytes} bytes`)]),
+    h("p", {}, [ text(`Encoded content size: ${encodedBytes} bytes`)]),
+    h("p", {}, [ text(`Final compressed size: ${compressedBytes} bytes`)]),
     h("p", {}, [ text(`Compression: ${compressionPercentage}%`)]),
     h("div", { onMouseLeave: () => ({ setHighlighted: null }) }, [
       h("p", {}, [ text("Content:")]),
@@ -203,9 +214,7 @@ function view(state) {
 
 window.initHuffmanVisualisation = function (root) {
   const initialState = {
-    content: `
-    asdfasdfasdfasdfasdfkkksdkfskdfasdnasdalsdfjasdlkfasdibnfasdjfna;sdlfjasdkfja;sldkfn dasdlfasdfjaklsdjfalksdjfa;sdfkajsdfkajsdkfjaskdfjaskdkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
-    `,
+    content: `asdfasdfasdfasdfasdfkkksdkfskdfasdnasdalsdfjasdlkfasdibnfasdjfna;sdlfjasdkfja;sldkfn dasdlfasdfjaklsdjfalksdjfa;sdfkajsdfkajsdkfjaskdfjaskdkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk`,
     highlighted: null
   };
   init(root, initialState, update, view);
