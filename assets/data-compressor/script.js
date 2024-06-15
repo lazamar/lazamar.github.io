@@ -40,7 +40,7 @@ function buildHTree(freqs) {
 function buildCodes(htree) {
   const toCode = (prefix, acc) => {
     if (prefix == null) {
-      return acc;
+      return acc.join("");
     }
     acc.push(prefix.value)
     return toCode(prefix.next, acc);
@@ -63,6 +63,11 @@ function buildCodes(htree) {
   return codes;
 }
 
+function encode(string) {
+  const codes = buildCodes(buildHTree(countFreq(string)));
+  return string.split("").map(char => codes.get(char));
+}
+
 const { init, h, text } = SMVC;
 
 function update(state, msg) {
@@ -81,6 +86,10 @@ function view(state) {
     h("input", { onInput : e => ({ setContent: e.target.value }) }, []),
     h("p", {}, [
       text("Content: " + state.content)
+    ]),
+    h("p", {}, [
+      text("Encoded: "),
+      h("span", { class: "h-encoded" }, encode(state.content).map(c => h("span",{}, [text(c)])))
     ]),
     h("div", {}, [...codes.entries()].map(x => {
       const [char, code] = x;
