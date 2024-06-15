@@ -76,6 +76,8 @@ function update(state, msg) {
   switch (action) {
     case "setContent":
       return { ...state, content :  msg.setContent };
+    case "setHighlighted":
+      return { ...state, highlighted :  msg.setHighlighted };
   }
 }
 
@@ -83,7 +85,18 @@ function view(state) {
   const freqs = countFreq(state.content);
   const codes = buildCodes(buildHTree(freqs));
 
+  // Map Code Char
+  const codeChar = [...codes.entries()].reduce((acc, x) => acc.set(x[1], x[0]), new Map())
+
   const encoded = encode(state.content);
+  const encodedWithDetails = encoded.reduce(
+    ({ offset, acc }, code) => {
+      const char = codeChar.get(code);
+      acc.push({ offset, code, char });
+      return { offset: offset + code.length, acc };
+    },
+    { offset: 0, acc: [] }
+  ).acc;
 
   const compressedBytes = Math.ceil(encoded.join("").length / 8);
   const originalBytes = (new TextEncoder().encode(state.content)).length
@@ -120,24 +133,31 @@ function view(state) {
     h("p", {}, [ text(`Compressed size: ${compressedBytes} bytes`)]),
     h("p", {}, [ text(`Compression: ${compressionPercentage}%`)]),
     h("p", {}, [ text("Content:")]),
-    h("p", { style: "word-wrap: break-word;" }, [ text(state.content) ]),
+    h("pre", { style: "word-wrap: break-word; text-wrap: wrap" },
+      state.content.split("").map(char =>
+        h("span",
+          { class: state.highlighted === char ? "highlighted" : "",
+            onMouseOver: () => ({ setHighlighted: char })
+          },
+          [text(char)]
+        )
+      )
+    ),
     h("p", {}, [ text("Encoded:")]),
     h( "div",
       { class: "h-encoded" },
-      encoded.reduce(
-        ({ counter, acc }, code) => {
-          acc.push([counter, code]);
-          return { counter: counter + code.length, acc };
-        }, { counter: 0, acc: [] }
-      )
-      .acc
-      .map(x => {
-        const [ offset, code ] = x;
+      encodedWithDetails.map(({ offset, code, char }) => {
         const withSpaces = code.split("").flatMap((char, ix) => {
           const isByteBoundary = (ix + offset) % 8 === 0;
           return isByteBoundary ? (" " + char) : char;
         }).join("");
-        return h("span",{}, [text(withSpaces)])
+        return h(
+          "span",
+          { class: state.highlighted === char ? "highlighted" : "",
+            onMouseOver: () => ({ setHighlighted: char })
+          },
+          [text(withSpaces)]
+        )
       })
     ),
     h("p", {}, [ text("Code words:")]),
@@ -148,8 +168,18 @@ function view(state) {
           h("th", {}, [text("Code word")]),
         ])
       ].concat(histogram.map(({ char, freq, code }) => {
-          return h("tr", {style : "font-family: monospace"}, [
-            h("td", {}, [text(char)]),
+          const charName = char == " "
+            ? "<space>"
+            : char == "\n"
+            ? "<newline>"
+            : char;
+
+          return h("tr", {
+            style : "font-family: monospace",
+            class : char == state.highlighted ? "highlighted" : "",
+            onMouseOver: () => ({ setHighlighted: char })
+          }, [
+            h("td", {}, [text(charName)]),
             h("td", { style: "position: relative" }, [
               text(freq),
               h("div", { style: `
@@ -173,7 +203,8 @@ window.initHuffmanVisualisation = function (root) {
   const initialState = {
     content: `
     asdfasdfasdfasdfasdfkkksdkfskdfasdnasdalsdfjasdlkfasdibnfasdjfna;sdlfjasdkfja;sldkfn dasdlfasdfjaklsdjfalksdjfa;sdfkajsdfkajsdkfjaskdfjaskdkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
-    `
+    `,
+    highlighted: null
   };
   init(root, initialState, update, view);
 }
