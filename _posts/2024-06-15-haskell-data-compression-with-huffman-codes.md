@@ -11,6 +11,7 @@ city: Póvoa de Varzim, Portugal 🇵🇹
 .h-encoded span {
     border: 1px solid black;
     padding: 0 2px;
+    display: inline-block;
 }
 
 .h-encoded span:nth-child(even) {

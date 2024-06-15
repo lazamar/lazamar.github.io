@@ -63,6 +63,7 @@ function buildCodes(htree) {
   return codes;
 }
 
+// String -> [String]
 function encode(string) {
   const codes = buildCodes(buildHTree(countFreq(string)));
   return string.split("").map(char => codes.get(char));
@@ -81,16 +82,36 @@ function update(state, msg) {
 function view(state) {
   const codes = buildCodes(buildHTree(countFreq(state.content)));
 
+  const encoded = encode(state.content);
+
+  const encodedLengthBytes = Math.ceil(encoded.join("").length / 8);
+  const originalLengthBytes = (new TextEncoder().encode(state.content)).length
+  const compressionPercentage =
+    originalLengthBytes == 0
+    ? 0
+    : Math.floor((100 * (encodedLengthBytes / originalLengthBytes)));
+
   return [
     h("label", {}, [ text("White your content") ]),
-    h("input", { onInput : e => ({ setContent: e.target.value }) }, []),
-    h("p", {}, [
-      text("Content: " + state.content)
-    ]),
-    h("p", {}, [
-      text("Encoded: "),
-      h("span", { class: "h-encoded" }, encode(state.content).map(c => h("span",{}, [text(c)])))
-    ]),
+    h(
+      "textarea",
+      { style: `
+          display: block;
+          max-width: 100%;
+          width: 30em;
+          height: 8em;`,
+        onInput : e => ({ setContent: e.target.value })
+      },
+      []
+    ),
+    h("p", {}, [ text(`Compression: ${compressionPercentage}%`)]),
+    h("p", {}, [ text("Content:")]),
+    h("p", {}, [ text(state.content) ]),
+    h("p", {}, [ text("Encoded:")]),
+    h( "div",
+      { class: "h-encoded" },
+      encoded.map(c => h("span",{}, [text(c)]))
+    ),
     h("div", {}, [...codes.entries()].map(x => {
       const [char, code] = x;
       return h("p", {}, [ text(char + ": " + code) ]);
