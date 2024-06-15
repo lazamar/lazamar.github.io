@@ -84,12 +84,12 @@ function view(state) {
 
   const encoded = encode(state.content);
 
-  const encodedLengthBytes = Math.ceil(encoded.join("").length / 8);
-  const originalLengthBytes = (new TextEncoder().encode(state.content)).length
+  const compressedBytes = Math.ceil(encoded.join("").length / 8);
+  const originalBytes = (new TextEncoder().encode(state.content)).length
   const compressionPercentage =
-    originalLengthBytes == 0
+    originalBytes == 0
     ? 0
-    : Math.floor((100 * (encodedLengthBytes / originalLengthBytes)));
+    : Math.floor((100 * (1 - (compressedBytes / originalBytes))));
 
   return [
     h("label", {}, [ text("White your content") ]),
@@ -100,17 +100,34 @@ function view(state) {
           max-width: 100%;
           width: 30em;
           height: 8em;`,
+        value: state.content,
         onInput : e => ({ setContent: e.target.value })
       },
       []
     ),
+    h("p", {}, [ text(`Original size: ${originalBytes} bytes`)]),
+    h("p", {}, [ text(`Compressed size: ${compressedBytes} bytes`)]),
     h("p", {}, [ text(`Compression: ${compressionPercentage}%`)]),
     h("p", {}, [ text("Content:")]),
     h("p", {}, [ text(state.content) ]),
     h("p", {}, [ text("Encoded:")]),
     h( "div",
       { class: "h-encoded" },
-      encoded.map(c => h("span",{}, [text(c)]))
+      encoded.reduce(
+        ({ counter, acc }, code) => {
+          acc.push([counter, code]);
+          return { counter: counter + code.length, acc };
+        }, { counter: 0, acc: [] }
+      )
+      .acc
+      .map(x => {
+        const [ offset, code ] = x;
+        const withSpaces = code.split("").flatMap((char, ix) => {
+          const isByteBoundary = (ix + offset) % 8 === 0;
+          return isByteBoundary ? (" " + char) : char;
+        }).join("");
+        return h("span",{}, [text(withSpaces)])
+      })
     ),
     h("div", {}, [...codes.entries()].map(x => {
       const [char, code] = x;
@@ -121,7 +138,9 @@ function view(state) {
 
 window.initHuffmanVisualisation = function (root) {
   const initialState = {
-    content: ""
+    content: `
+    asdfasdfasdfasdfasdfkkksdkfskdfasdnasdalsdfjasdlkfasdibnfasdjfna;sdlfjasdkfja;sldkfn dasdlfasdfjaklsdjfalksdjfa;sdfkajsdfkajsdkfjaskdfjaskdkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
+    `
   };
   init(root, initialState, update, view);
 }
