@@ -28,6 +28,25 @@ city: Póvoa de Varzim, Portugal 🇵🇹
     background-color: #f05f70 !important;
 }
 
+.h-code {
+    position: relative;
+    cursor: pointer;
+}
+
+.h-code-char {
+    position: absolute;
+    top: calc(-100% - 1em);
+    left: 0;
+    background-color: bisque;
+    padding: .2em 1em;
+    border: 1px solid black;
+    visibility: hidden;
+}
+
+.h-code:hover .h-code-char {
+    visibility: visible;
+}
+
 </style>
 
 <div class="huffman-visualisation"></div>

@@ -86,6 +86,15 @@ function stringBytes(str) {
  return (new TextEncoder().encode(str)).length
 }
 
+function charName(char) {
+  return char == " "
+    ? "<space>"
+    : char == "\n"
+    ? "<newline>"
+    : char;
+}
+
+
 function view(state) {
   const freqs = countFreq(state.content);
   const codes = buildCodes(buildHTree(freqs));
@@ -107,7 +116,7 @@ function view(state) {
   const freqTableBytes = [...freqs.keys()]
       .map(k => stringBytes(k) + 4)
       .reduce((acc, x) => acc + x, 0);
-  const compressedBytes =  freqTableBytes + encodedBytes;
+  const compressedBytes = freqTableBytes + encodedBytes;
   const originalBytes = stringBytes(state.content);
   const compressionPercentage =
     originalBytes == 0
@@ -166,10 +175,12 @@ function view(state) {
       h("pre", { style: "word-wrap: break-word; text-wrap: wrap" },
         state.content.split("").map(char =>
           h("span",
-            { class: state.highlighted === char ? "highlighted" : "",
+            { class: "h-code " + (state.highlighted === char ? "highlighted" : ""),
               onMouseOver: () => ({ setHighlighted: char })
             },
-            [text(char)]
+            [ text(char)
+            , h("div", { class: "h-code-char" }, [ text(codes.get(char)) ])
+            ]
           )
         )
       ),
@@ -183,10 +194,12 @@ function view(state) {
           }).join("");
           return h(
             "span",
-            { class: state.highlighted === char ? "highlighted" : "",
-              onMouseOver: () => ({ setHighlighted: char })
+            { class: "h-code " + (state.highlighted === char ? "highlighted" : ""),
+              onMouseOver: () => ({ setHighlighted: char }),
             },
-            [text(withSpaces)]
+            [ text(withSpaces)
+            , h("div", { class: "h-code-char" }, [ text(charName(char)) ])
+            ]
           )
         })
       ),
@@ -198,18 +211,12 @@ function view(state) {
             h("th", {}, [text("Code word")]),
           ])
         ].concat(histogram.map(({ char, freq, code }) => {
-            const charName = char == " "
-              ? "<space>"
-              : char == "\n"
-              ? "<newline>"
-              : char;
-
             return h("tr", {
               style : "font-family: monospace",
               class : char == state.highlighted ? "highlighted" : "",
               onMouseOver: () => ({ setHighlighted: char })
             }, [
-              h("td", {}, [text(charName)]),
+              h("td", {}, [text(charName(char))]),
               h("td", { style: "position: relative" }, [
                 text(freq),
                 h("div", { style: `
@@ -232,7 +239,10 @@ function view(state) {
 
 window.initHuffmanVisualisation = function (root) {
   const initialState = {
-    content: `asdfasdfasdfasdfasdfkkksdkfskdfasdnasdalsdfjasdlkfasdibnfasdjfna;sdlfjasdkfja;sldkfn dasdlfasdfjaklsdjfalksdjfa;sdfkajsdfkajsdkfjaskdfjaskdkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk`,
+    content: `In this post I’ll walk through the full implementation of a Virtual DOM in a bit over 200 lines of JavaScript.
+The result is a full-featured and sufficiently performant virtual DOM library (demos). It’s available on NPM as the smvc package.
+The main goal is to illustrate the fundamental technique behind tools like React.
+React, Vue and the Elm language all simplify the creation of interactive web pages by allowing you to describe how you’d like the page to look like, and not worry about adding/removing elements to get there. They do that through a Virtual DOM.`,
     highlighted: null
   };
   init(root, initialState, update, view);
