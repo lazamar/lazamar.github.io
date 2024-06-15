@@ -12,14 +12,16 @@ city: Póvoa de Varzim, Portugal 🇵🇹
     font-family: monospace;
 }
 
-// .h-encoded span {
-//     border: 1px solid black;
-//     padding: 0 2px;
-//     display: inline-block;
-// }
-
 .h-encoded span:nth-child(odd) {
     background-color: #dadada;
+}
+
+.h-table tr:nth-child(even) {
+    background-color: #eee;
+}
+
+.h-table th, .h-table td {
+    padding: 0 1em;
 }
 
 </style>

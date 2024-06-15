@@ -80,7 +80,8 @@ function update(state, msg) {
 }
 
 function view(state) {
-  const codes = buildCodes(buildHTree(countFreq(state.content)));
+  const freqs = countFreq(state.content);
+  const codes = buildCodes(buildHTree(freqs));
 
   const encoded = encode(state.content);
 
@@ -91,14 +92,24 @@ function view(state) {
     ? 0
     : Math.floor((100 * (1 - (compressedBytes / originalBytes))));
 
+  const histogram = [...codes.entries()]
+    .map(x => {
+      const [char, code] = x;
+      const freq = freqs.get(char);
+      return { char, freq, code };
+    })
+    .sort((l,r) => l.freq - r.freq)
+    .reverse();
+
+  const maxFreq = histogram.reduce((acc, v) => Math.max(acc, v.freq), 0);
+
   return [
     h("label", {}, [ text("White your content") ]),
     h(
       "textarea",
       { style: `
           display: block;
-          max-width: 100%;
-          width: 30em;
+          width: 100%;
           height: 8em;`,
         value: state.content,
         onInput : e => ({ setContent: e.target.value })
@@ -109,7 +120,7 @@ function view(state) {
     h("p", {}, [ text(`Compressed size: ${compressedBytes} bytes`)]),
     h("p", {}, [ text(`Compression: ${compressionPercentage}%`)]),
     h("p", {}, [ text("Content:")]),
-    h("p", {}, [ text(state.content) ]),
+    h("p", { style: "word-wrap: break-word;" }, [ text(state.content) ]),
     h("p", {}, [ text("Encoded:")]),
     h( "div",
       { class: "h-encoded" },
@@ -129,10 +140,32 @@ function view(state) {
         return h("span",{}, [text(withSpaces)])
       })
     ),
-    h("div", {}, [...codes.entries()].map(x => {
-      const [char, code] = x;
-      return h("p", {}, [ text(char + ": " + code) ]);
-    }))
+    h("p", {}, [ text("Code words:")]),
+    h("table", { class: "h-table" },
+      [ h("tr", {}, [
+          h("th", {}, [text("Character")]),
+          h("th", {}, [text("Occurrences")]),
+          h("th", {}, [text("Code word")]),
+        ])
+      ].concat(histogram.map(({ char, freq, code }) => {
+          return h("tr", {style : "font-family: monospace"}, [
+            h("td", {}, [text(char)]),
+            h("td", { style: "position: relative" }, [
+              text(freq),
+              h("div", { style: `
+                width: ${100 * (freq / maxFreq)}%;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                background-color: #2e9fff59;
+                ` }, [])
+            ]),
+            h("td", {}, [text(code)]),
+          ]);
+        })
+      )
+    )
   ];
 }
 
