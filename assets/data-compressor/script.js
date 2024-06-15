@@ -138,11 +138,29 @@ function view(state) {
       },
       []
     ),
-    h("p", {}, [ text(`Original size: ${originalBytes} bytes`)]),
-    h("p", {}, [ text(`Freqency table size: ${freqTableBytes} bytes`)]),
-    h("p", {}, [ text(`Encoded content size: ${encodedBytes} bytes`)]),
-    h("p", {}, [ text(`Final compressed size: ${compressedBytes} bytes`)]),
-    h("p", {}, [ text(`Compression: ${compressionPercentage}%`)]),
+    h("table",{}, [
+      h("tr", {}, [
+        h("td",{}, [text("Original size")]),
+        h("td",{}, [text(`${originalBytes} bytes`) ])
+      ]),
+
+      h("tr", {}, [
+        h("td",{}, [text("Freqency table size")]),
+        h("td",{}, [text(`${freqTableBytes} bytes`) ])
+      ]),
+      h("tr", {}, [
+        h("td",{}, [text("Encoded content size")]),
+        h("td",{}, [text(`${encodedBytes} bytes`) ])
+      ]),
+      h("tr", {}, [
+        h("td",{}, [text("Final compressed size")]),
+        h("td",{}, [text(`${compressedBytes} bytes`) ])
+      ]),
+      h("tr", {}, [
+        h("td",{}, [text("Compression")]),
+        h("td",{ style: "font-weight: bold" }, [text(`${compressionPercentage}%`) ])
+      ]),
+    ]),
     h("div", { onMouseLeave: () => ({ setHighlighted: null }) }, [
       h("p", {}, [ text("Content:")]),
       h("pre", { style: "word-wrap: break-word; text-wrap: wrap" },
