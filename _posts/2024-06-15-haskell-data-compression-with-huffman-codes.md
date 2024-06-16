@@ -38,13 +38,25 @@ city: Póvoa de Varzim, Portugal 🇵🇹
     cursor: pointer;
 }
 
+.h-code-label,
+.h-code-char {
+    background-color: bisque;
+    padding: .2em 1em;
+    border: 1px solid black;
+    pointer-events: none;
+}
+
+.h-code-label {
+    display: none;
+    position: fixed;
+    top: var(--mouse-y);
+    left: var(--mouse-x);
+}
+
 .h-code-char {
     position: absolute;
     top: calc(-100% - 1em);
     left: 0;
-    background-color: bisque;
-    padding: .2em 1em;
-    border: 1px solid black;
     visibility: hidden;
 }
 
@@ -52,7 +64,24 @@ city: Póvoa de Varzim, Portugal 🇵🇹
     visibility: visible;
 }
 
+
+.h-encoded:hover .h-code-label {
+    display: block;
+}
+
+
+
 </style>
+
+<script>
+document.addEventListener('mousemove', evt => {
+    let x = evt.clientX;
+    let y = evt.clientY;
+
+    document.body.style.setProperty('--mouse-x', `${x}px`);
+    document.body.style.setProperty('--mouse-y', `${y}px`);
+});
+</script>
 
 <div class="huffman-visualisation"></div>
 <script>

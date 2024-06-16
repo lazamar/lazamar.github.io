@@ -180,7 +180,7 @@ function view(state) {
       ),
       h("p", {}, [ text("Encoded:")]),
       h( "div",
-        { class: "h-encoded" },
+        { class: "h-encoded", onMouseLeave: () => ({ setHighlighted: null }) },
         encodedWithDetails.map(({ offset, code, char }) => {
           const withSpaces = code.split("").flatMap((char, ix) => {
             const isByteBoundary = (ix + offset) % 8 === 0;
@@ -192,10 +192,14 @@ function view(state) {
               onMouseOver: () => ({ setHighlighted: char }),
             },
             [ text(withSpaces)
-            , h("div", { class: "h-code-char" }, [ text(charName(char)) ])
             ]
           )
         })
+        .concat(
+          state.highlighted !== null
+            ? [h("div", { class: "h-code-label" }, [ text(charName(state.highlighted)) ])]
+            : []
+        )
       ),
       h("p", {}, [ text("Code words:")]),
       h("table", { class: "h-table" },
@@ -237,7 +241,7 @@ window.initHuffmanVisualisation = function (root) {
 The result is a full-featured and sufficiently performant virtual DOM library (demos). It’s available on NPM as the smvc package.
 The main goal is to illustrate the fundamental technique behind tools like React.
 React, Vue and the Elm language all simplify the creation of interactive web pages by allowing you to describe how you’d like the page to look like, and not worry about adding/removing elements to get there. They do that through a Virtual DOM.`,
-    highlighted: null
+    highlighted: null,
   };
   init(root, initialState, update, view);
 }

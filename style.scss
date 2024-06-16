@@ -8,6 +8,9 @@
 // to get a good match.
 $link-colour: #8f413b; // #00645b; // #005aa2; //
 
+// when to switch from desktop to mobile.
+$break-point: 780px;
+
 * {
     box-sizing: border-box;
 }
@@ -20,7 +23,7 @@ html {
     border: 15px solid black;
 }
 
-@media (max-width: 780px) {
+@media (max-width: $break-point) {
     html {
         border-width: 5px;
     }
@@ -78,6 +81,12 @@ blockquote {
 
 .columns {
     display: flex;
+}
+
+@media (max-width: $break-point) {
+    .columns {
+        display: block;
+    }
 }
 
 .column {
