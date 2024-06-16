@@ -113,10 +113,7 @@ function view(state) {
   ).acc;
 
   const encodedBytes = Math.ceil(encoded.map(v => v.length).reduce((x,y) => x + y, 0) / 8);
-  const freqTableBytes = [...freqs.keys()]
-      .map(k => stringBytes(k) + 4)
-      .reduce((acc, x) => acc + x, 0);
-  const compressedBytes = freqTableBytes + encodedBytes;
+  const compressedBytes = encodedBytes;
   const originalBytes = stringBytes(state.content);
   const compressionPercentage =
     originalBytes == 0
@@ -136,38 +133,35 @@ function view(state) {
 
   return [
     h("label", {}, [ text("Write your content") ]),
-    h(
-      "textarea",
-      { style: `
-          display: block;
-          width: 100%;
-          height: 8em;`,
-        value: state.content,
-        onInput : e => ({ setContent: e.target.value })
-      },
-      []
-    ),
-    h("table",{}, [
-      h("tr", {}, [
-        h("td",{}, [text("Original size")]),
-        h("td",{}, [text(`${originalBytes} bytes`) ])
+    h("div", { class: "columns" }, [
+      h("div", { class: "column" }, [
+        h(
+          "textarea",
+          { style: `
+              display: block;
+              width: 100%;
+              height: 8em;`,
+            value: state.content,
+            onInput : e => ({ setContent: e.target.value })
+          },
+          []
+        ),
       ]),
-
-      h("tr", {}, [
-        h("td",{}, [text("Freqency table size")]),
-        h("td",{}, [text(`${freqTableBytes} bytes`) ])
-      ]),
-      h("tr", {}, [
-        h("td",{}, [text("Encoded content size")]),
-        h("td",{}, [text(`${encodedBytes} bytes`) ])
-      ]),
-      h("tr", {}, [
-        h("td",{}, [text("Final compressed size")]),
-        h("td",{}, [text(`${compressedBytes} bytes`) ])
-      ]),
-      h("tr", {}, [
-        h("td",{}, [text("Compression")]),
-        h("td",{ style: "font-weight: bold" }, [text(`${compressionPercentage}%`) ])
+      h("div", { class: "column" }, [
+        h("table",{}, [
+          h("tr", {}, [
+            h("td",{}, [text("Original size")]),
+            h("td",{}, [text(`${originalBytes} bytes`) ])
+          ]),
+          h("tr", {}, [
+            h("td",{}, [text("Encoded size")]),
+            h("td",{}, [text(`${encodedBytes} bytes`) ])
+          ]),
+          h("tr", {}, [
+            h("td",{}, [text("Compression")]),
+            h("td",{ style: "font-weight: bold" }, [text(`${compressionPercentage}%`) ])
+          ]),
+        ]),
       ]),
     ]),
     h("div", { onMouseLeave: () => ({ setHighlighted: null }) }, [

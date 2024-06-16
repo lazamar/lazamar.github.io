@@ -8,6 +8,11 @@ city: Póvoa de Varzim, Portugal 🇵🇹
 <script src="/assets/data-compressor/script.js"></script>
 
 <style>
+.huffman-visualisation {
+    border: 2px solid black;
+    padding: 1em;
+}
+
 .h-encoded {
     font-family: monospace;
 }
