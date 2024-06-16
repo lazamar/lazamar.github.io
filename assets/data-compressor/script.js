@@ -166,16 +166,7 @@ function view(state) {
     ]),
     h("div", { onMouseLeave: () => ({ setHighlighted: null }) }, [
       h("p", {}, [ text("Content:")]),
-      h("pre",
-        { style: `
-            word-wrap: break-word;
-            text-wrap: wrap;
-            padding: 1em;
-            background-color: #eee;
-            max-height: 10em;
-            overflow: auto;
-          `
-        },
+      h("pre", { class: "h-content" },
         state.content.split("").map(char =>
           h("span",
             { class: "h-code " + (state.highlighted === char ? "highlighted" : ""),

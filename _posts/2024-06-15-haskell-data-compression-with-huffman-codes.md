@@ -13,8 +13,19 @@ city: Póvoa de Varzim, Portugal 🇵🇹
     padding: 1em;
 }
 
+.h-content {
+    word-wrap: break-word;
+    text-wrap: wrap;
+    padding: 1em;
+    background-color: #eee;
+}
+
 .h-encoded {
     font-family: monospace;
+
+    max-height: 20em;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .h-encoded span:nth-child(odd) {
