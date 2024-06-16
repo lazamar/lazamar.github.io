@@ -96,3 +96,24 @@ blockquote {
     flex-shrink: 1;
     padding: 0.75rem;
 }
+
+.table-striped {
+    border-collapse: collapse;
+
+    td, th {
+        border: 1px solid black;
+        padding: 0 1em;
+    }
+
+    tr:nth-child(even) {
+        background-color: #eee;
+    }
+
+    tr:nth-child(odd) {
+        background-color: #fff;
+    }
+}
+
+.h-table th, .h-table td {
+    padding: 0 1em;
+}

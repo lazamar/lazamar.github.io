@@ -166,7 +166,16 @@ function view(state) {
     ]),
     h("div", { onMouseLeave: () => ({ setHighlighted: null }) }, [
       h("p", {}, [ text("Content:")]),
-      h("pre", { style: "word-wrap: break-word; text-wrap: wrap" },
+      h("pre",
+        { style: `
+            word-wrap: break-word;
+            text-wrap: wrap;
+            padding: 1em;
+            background-color: #eee;
+            max-height: 10em;
+            overflow: auto;
+          `
+        },
         state.content.split("").map(char =>
           h("span",
             { class: "h-code " + (state.highlighted === char ? "highlighted" : ""),
@@ -202,7 +211,7 @@ function view(state) {
         )
       ),
       h("p", {}, [ text("Code words:")]),
-      h("table", { class: "h-table" },
+      h("table", { class: "table-striped" },
         [ h("tr", {}, [
             h("th", {}, [text("Character")]),
             h("th", {}, [text("Occurrences")]),
@@ -237,10 +246,7 @@ function view(state) {
 
 window.initHuffmanVisualisation = function (root) {
   const initialState = {
-    content: `In this post I’ll walk through the full implementation of a Virtual DOM in a bit over 200 lines of JavaScript.
-The result is a full-featured and sufficiently performant virtual DOM library (demos). It’s available on NPM as the smvc package.
-The main goal is to illustrate the fundamental technique behind tools like React.
-React, Vue and the Elm language all simplify the creation of interactive web pages by allowing you to describe how you’d like the page to look like, and not worry about adding/removing elements to get there. They do that through a Virtual DOM.`,
+    content: "Try it out with your own content.",
     highlighted: null,
   };
   init(root, initialState, update, view);

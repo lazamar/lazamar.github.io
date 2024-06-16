@@ -21,14 +21,6 @@ city: Póvoa de Varzim, Portugal 🇵🇹
     background-color: #dadada;
 }
 
-.h-table tr:nth-child(even) {
-    background-color: #eee;
-}
-
-.h-table th, .h-table td {
-    padding: 0 1em;
-}
-
 .highlighted {
     background-color: #f05f70 !important;
 }
