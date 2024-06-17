@@ -40,7 +40,7 @@ function buildHTree(freqs) {
 function buildCodes(htree) {
   const toCode = (prefix, acc) => {
     if (prefix == null) {
-      return acc.join("");
+      return acc.reverse().join("");
     }
     acc.push(prefix.value)
     return toCode(prefix.next, acc);
