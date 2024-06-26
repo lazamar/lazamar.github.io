@@ -4,6 +4,16 @@ title: Building a data compression utility in Haskell using Huffman codes
 city: Póvoa de Varzim, Portugal 🇵🇹
 ---
 
+
+<img style="
+        margin-top: -12%;
+        margin-bottom: -9%;"
+    src="/images/data-compressor.svg"
+    alt="Data compression illustration"
+    title="Illustration from https://www.transhumans.xyz/"
+/>
+
+
 <script src="/assets/data-compressor/smvc.js"></script>
 <script src="/assets/data-compressor/script.js"></script>
 
