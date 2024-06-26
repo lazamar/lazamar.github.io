@@ -17,6 +17,8 @@ The plan is:
 
 We will leverage laziness to keep our memory footprint constant while the code remains modular. A good example of [Why Functional Programming Matters](https://www.cs.kent.ac.uk/people/staff/dat/miranda/whyfp90.pdf).
 
+The full code is available [here](https://github.com/lazamar/compressor).
+
 ## Crash course on Huffman codes
 
 The idea is straightforward:
@@ -129,12 +131,11 @@ Here is how this process would go for the string `aaabc`:
 />
 
 
-You now know Huffman codes! You've seen what they are, how they achieve compression and how to implement them.
+Now you know Huffman codes! You've seen what they are, how they achieve compression, and how to implement them.
 
 ### Playground
 
-You can play with it in the box below.
-You can change the text and see how well it compresses and what different code words you get and what the binary result looks like.
+You can change the text in the box below and see how well it compresses, what different code words you get, and what the binary result looks like.
 Hover the encoded content to see what character it represents.
 
 <style>
@@ -224,3 +225,172 @@ document.addEventListener('mousemove', evt => {
 <script>
     initHuffmanVisualisation(document.querySelector(".huffman-visualisation"))
 </script>
+
+## Writing the coder.
+
+Ok, so now that we know how it goes, writing the coder is pretty trivial.
+
+First, let's lay out the types we'll need.
+
+``` haskell
+-- import Data.Map.Strict (Map)
+
+data Bit = One | Zero
+  deriving Show
+
+-- A code word
+type Code = [Bit]
+
+-- How often each character appears
+type FreqMap = Map Char Int
+
+-- Find a character's code word
+type CodeMap = Map Char Code
+
+-- How often all characters in a tree appear
+type Weight = Int
+
+-- Our complete binary tree with the weight for each subtree
+data HTree
+  = Leaf Weight Char
+  | Fork Weight HTree HTree
+  deriving Eq
+
+-- Making trees comparable by weight will simplify the tree building.
+instance Ord HTree where
+  compare x y = compare (weight x) (weight y)
+
+weight :: HTree -> Int
+weight htree = case htree of
+  Leaf w _ -> w
+  Fork w _ _ -> w
+```
+
+The encoder is just a function that given a string, outputs some bits.
+But with just the bits the decoder can't retrieve the original text. It needs to know the mapping used.
+
+The mapping can be build from the `FreqMap` so let's pass that whenever we are encoding or decoding.
+
+So we want to write the two functions:
+
+``` haskell
+encode :: FreqMap -> String -> [Bit]
+
+decode :: FreqMap -> [Bit] -> String
+```
+
+### Encode
+
+Let's start by building the `FreqMap`,
+
+``` haskell
+countFrequency :: String -> FreqMap
+countFrequency = Map.fromListWith (+) . fmap (,1)
+```
+
+Easy enough. As seen before, we can build our Huffman tree from that. So let's do it.
+
+``` haskell
+-- import Data.List (sort, insert)
+-- import qualified Data.Map.Strict as Map
+
+buildTree :: FreqMap -> HTree
+buildTree = build . sort . fmap (\(c,w) -> Leaf w c) . Map.toList
+  where
+  build trees = case trees of
+    [] -> error "empty trees"
+    [x] -> x
+    (x:y:rest) -> build $ insert (merge x y) rest
+
+  merge x y = Fork (weight x + weight y) x y
+```
+
+Here is where that `Ord` instance we defined came in handy. We make all characters into weighted `Leaf`s.
+Then we sort them, getting the least frequent ones to the front.
+After that we repeatedly merge the front elements of the sorted list and insert the merged output back again.
+The `insert` function does an insert-sorted here, keeping our invariant of least frequent at the front.
+
+With the Huffman tree in place we can just create the codes!
+
+``` haskell
+buildCodes :: HTree -> CodeMap
+buildCodes = Map.fromList . go []
+  where
+  go :: Code -> HTree -> [(Char, Code)]
+  go prefix tree = case tree of
+    Leaf _ char -> [(char, reverse prefix)]
+    Fork _ left right ->
+      go (One : prefix) left ++
+      go (Zero : prefix) right
+
+```
+
+With that we have all the parts to write `encode`!
+
+``` haskell
+encode :: FreqMap -> String -> [Bit]
+encode freqMap str = encoded
+  where
+  codemap = buildCodes $ buildTree freqMap
+  encoded = concatMap codeFor str
+  codeFor char = codemap Map.! char
+```
+
+> **A note on laziness**.
+>
+> The step that transforms the original input into a list of bits is `concatMap codeFor str`.
+Conceptually, the transformation is: `[Char]` to `[[Bit]]` to `[Bit]`.
+If it happened this way it would be a big problem given we'd need to encode the entire input first to only then concatenate all the results.
+Our RAM would need to be at least as large as twice our input.
+In reality, the small sublists are flattened into the large result from left to right as we go.
+>
+> This is no mundane feat! Remember, the result is an immutable linked-list.
+How can we proceed from left to right, creating the head of the list before the tail without ever modifying any of its nodes?
+That's the beauty of it. The tail is an unevaluated thunk which only gets calculated after we ask for its value.
+
+### Decode
+
+With that in place, we can decode the bits back into the original string.
+
+``` haskell
+decode :: FreqMap -> [Bit] -> String
+decode freqMap bits = go 1 htree bits
+  where
+  htree = buildTree freqMap
+  total = weight htree -- how many characters were encoded.
+  go count tree xs = case (tree, xs) of
+    (Leaf _ char, rest)
+      | count == total -> [char]
+      | otherwise -> char : go (count + 1) htree rest
+    (Fork _ left _ , One  : rest) -> go count left rest
+    (Fork _ _ right, Zero : rest) -> go count right rest
+    (Fork{}, []) -> error "bad decoding"
+```
+
+`go` will go through the tree from the root, using the bits in the input to decide whether to go
+left or right at each internal tree node.
+When we reach a leaf node we add the character to the output and start again from the root.
+
+We do that till we have decoded all the characters.
+
+We use the `total` number of characters to know when to stop rather than the end of the input list of bits because,
+as we will see, on the serialisation section we will add some padding at the end for alignment at the byte mark.
+
+Notice how `go` function, upon reaching a `Leaf`, returns a list where the head is known and the tail is a recursive call.
+This makes this function **productive**. It means that its result can start to be evaluated before the entire recursion is complete.
+
+Like it was with `concatMap` during encoding, this design will allow us to process a large input *incrementally*.
+And with the right setup we can use this to run our program in *constant memory*. And that's the next step.
+
+With these pieces we can already encode and decode text using Huffman codes. Let's try it out in `ghci`.
+
+``` bash
+$ gchi Main.hs
+ghci> input = "Hello World"
+ghci> freq = countFrequency input
+ghci> bits = encode freq input
+ghci> bits
+[Zero,Zero,One,Zero,One,One,One,Zero,One,Zero,One,Zero,Zero,Zero,Zero,Zero,One,One,One,Zero,One,Zero,Zero,Zero,One,One,Zero,Zero,One,One,Zero,Zero]
+ghci> decode freq bits
+"Hello World"
+```
