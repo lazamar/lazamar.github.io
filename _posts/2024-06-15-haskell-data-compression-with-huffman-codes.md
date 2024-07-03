@@ -687,3 +687,7 @@ Here are a few that you could give a go at implementing yourself:
 And that's it. A usable data compression utility in Haskell.
 
 In the future I may write about using an adaptive dictionary scheme like LZ77. With Huffman codes and LZ77 we can implement gzip.
+
+---
+
+You can discuss this post [here](https://www.reddit.com/r/haskell/comments/1duc64e/building_a_data_compression_utility_in_haskell/).
