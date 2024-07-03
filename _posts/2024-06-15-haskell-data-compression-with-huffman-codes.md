@@ -6,8 +6,9 @@ city: Póvoa de Varzim, Portugal 🇵🇹
 
 
 <img style="
-        margin-top: -12%;
-        margin-bottom: -9%;"
+    margin: -12% auto -9% auto;
+    width: 80%;
+    display: block;"
     src="/images/data-compressor.svg"
     alt="Data compression illustration"
     title="Illustration from https://www.transhumans.xyz/"
@@ -404,3 +405,285 @@ ghci> bits
 ghci> decode freq bits
 "Hello World"
 ```
+
+## Using the coder with binary files
+
+We can encode text input. That's all well and good but how do we go from that to encoding binary data?
+
+First we notice that the keys of our frequency map represent all the different things we may want to encode, each with a different frequency.
+They are characters but they could have been something else.
+
+Then we notice that particular byte is nothing more than one out of 256 possible bytes.
+So, to encode binary data we just need a frequency map of of bytes (`Word8`) rather than of characters.
+
+But our lives can be even easier. We can use the [`Data.ByteString.Char8`](https://hackage.haskell.org/package/bytestring-0.12.1.0/docs/Data-ByteString-Char8.html) module to read bytes as `Char`s!
+The module allows us to
+
+> Manipulate `ByteStrings` using `Char` operations.
+> All Chars will be truncated to 8 bits.
+> It can be expected that these functions will run at identical speeds to their `Word8` equivalents in `Data.ByteString`.
+
+This means we can use our text coder to encode binary data. We don't need to change any of the code.
+
+### Serialising
+
+We start by converting the output into actual bytes which we can save in a real binary file.
+
+But notice that a decoder can't just decode a stream of zeroes and ones without any context.
+It will need the frequency map to do that.
+So our compressed output will start with the frequency map, followed by the encoded content.
+
+We want this function
+
+``` haskell
+serialize :: FreqMap -> [Bit] -> ByteString
+```
+
+To build the `ByteString` lazily and efficiently we will use the `Put` monad from the `binary` package.
+
+``` haskell
+-- import Data.Binary.Put (Put)
+-- import qualified Data.Binary.Put as Put
+-- import Data.ByteString.Internal (c2w, w2c)
+
+serializeFreqMap :: FreqMap -> Put
+serializeFreqMap freqMap = do
+  Put.putWord8 $ fromIntegral (Map.size freqMap) - 1
+  forM_ (Map.toList freqMap) $ \(char, freq) -> do
+    Put.putWord8 (c2w char)
+    Put.putInt64be $ fromIntegral freq
+```
+
+Here we encode first the length of the map as a `Word8`.
+We have to subtract one because the `Word8` range is [0..256) whilst we need to represent the range (0..256].
+We will add one when decoding to compensate.
+
+Then we encode each map entry as a `Word8` for the key followed by a 64 bit integer for the value.
+
+With that we can write the complete serialisation code.
+
+``` haskell
+-- import Data.Word (Word8)
+-- import Control.Monad (replicateM, forM_, unless)
+
+serialize :: FreqMap -> [Bit] -> ByteString
+serialize freqmap bits = Put.runPut $ do
+  serializeFreqMap freqmap
+  write False 0 0 bits
+  where
+  write
+    :: Bool   -- ^ are we writing the end marker
+    -> Int    -- ^ bits filled in current byte
+    -> Word8  -- ^ byte being filled
+    -> [Bit]  -- ^ remaining bits
+    -> Put
+  write end n w bs
+    | n == 8 = do
+      Put.putWord8 w
+      unless end $ write end 0 0 bs
+    | otherwise =
+      case bs of
+        (One : rest) -> write end (n + 1) (w * 2 + 1) rest
+        (Zero : rest) -> write end (n + 1) (w * 2) rest
+        [] -> write True n w $ replicate (8 - n) Zero -- pad with zeroes
+```
+
+In `write` we build one byte at a time, starting with the rightmost bit of the byte.
+The multiplication by 2 shifts the bits to the left, allowing space for the next bit to be added.
+
+Once we've gone through 8 bits we write the byte and start again.
+
+In the last byte we pad all remaining bits with zero.
+
+### Deserialising
+
+Now let's read what we encoded.
+
+For the frequency map we will use the dual of `Put` from `Data.Binary.Get`. It's simple enough, just the inverse of what we did before.
+
+``` haskell
+-- import Data.Binary.Get (Get)
+-- import qualified Data.Binary.Get as Get
+
+deserializeFreqMap :: Get FreqMap
+deserializeFreqMap = do
+  n <- Get.getWord8
+  let len = fromIntegral n + 1
+  entries <- replicateM len $ do
+    char <- Get.getWord8
+    freq <- Get.getInt64be
+    return (w2c char, fromIntegral freq)
+  return $ Map.fromList entries
+```
+
+With that in our pocket let's deserialise the whole thing.
+Let's keep in mind that the `ByteString` here is a lazy `ByteString` produced by reading an input file.
+
+``` haskell
+-- import Data.ByteString.Lazy.Char8 (ByteString)
+-- import qualified Data.ByteString.Lazy.Char8 as BS
+
+deserialize :: ByteString -> (FreqMap, [Bit])
+deserialize bs = (freqMap, bits)
+  where
+  (freqMap, offset) = flip Get.runGet bs $ do
+    m <- deserializeFreqMap
+    o <- fromIntegral <$> Get.bytesRead
+    return (m, o)
+
+  bits = concatMap toBits chars
+
+  chars = drop offset $ BS.unpack bs
+
+  toBits :: Char -> [Bit]
+  toBits char = getBit 0 (c2w char)
+
+  getBit :: Int -> Word8 -> [Bit]
+  getBit n word =
+    if n == 8
+      then []
+      else bit : getBit (n + 1) (word * 2)
+    where
+      -- Test the leftmost bit. The byte 10000000 is the number 128.
+      -- Anything less than 128 has a zero on the leftmost bit.
+      bit = if word < 128 then Zero else One
+```
+
+Notice how for the rest of the input we don't use `Get`.
+The reason for this is that we want `deserialize` to return a `[Bit]` which is lazily built.
+
+That is, we want it to return the `[Bit]` immediately, but this list is in reality just an unevaluated [thunk](https://wiki.haskell.org/Thunk).
+This has some interesting consequences. We shouldn't, for example, ask to see the length of this list.
+If we did that the entire list would have to be evaluated before giving us this information.
+
+If we used `Get` for the entire input, we'd have a bunch of `getWord8` calls linked together via monadic bind (`>>=`).
+Monads encode sequencing, so returning the list would be the last action to be performed, requiring the entire input to be processed before returning.
+
+Our strategy for constant memory usage is that whenever we want get some output bits to write we will process the next portion of the `[Bit]`,
+this will cause a small section of the `ByteString` to be evaluated, which will cause the respective part of the input file to be read.
+We will then write this processed content into the output file.
+Because we won't use the `[Bit]` or `ByteString` in other parts of the program, the garbage collector will be able to free the memory we just allocated for
+that portion of input that we decoded.
+This process is repeated until we reach the end of our input. We read little bit, write a little bit, free the memory we used. Thus achieving a constant memory overhead.
+
+But isn't the memory required proportional to the size of the `FreqMap`? Yes, but if we are encoding bytes `FreqMap` can have at most 256 entries, thus a constant overhead.
+
+## Everything together now
+
+We can encode and decode stuff as well as put and extract that from byte strings. Let's apply it to real files.
+
+``` haskell
+compress :: FilePath -> FilePath -> IO ()
+compress src dst = do
+  freqMap <- countFrequency . BS.unpack <$> BS.readFile src
+  content <- BS.unpack <$> BS.readFile src
+  let bits = encode freqMap content
+  BS.writeFile dst (serialize freqMap bits)
+  putStrLn "Done."
+
+decompress :: FilePath -> FilePath -> IO ()
+decompress src dst = do
+  bs <- BS.readFile src
+  let (freqMap, bits) = deserialize bs
+      str = decode freqMap bits
+  BS.writeFile dst (BS.pack str)
+  putStrLn "Done."
+```
+
+Notice how on `compress` we read the file twice.
+The reason for this is that we need one full pass over the file to build the frequency map and another one to encode the data using this frequency map.
+If we read the file only once, we would hold a reference to it after the frequency map was built, so that we could pass that reference to `encode`.
+This would require us to hold the entire input file in memory!
+
+By reading the file twice we can free the memory as we go both when building the frequency map as well as when encoding.
+
+Decompression is pretty straightforward.
+
+Now we just wrap it in a simple CLI interface and we are done.
+
+``` haskell
+-- import System.Environment (getArgs)
+
+main :: IO ()
+main = do
+  args <- getArgs
+  case args of
+    ["compress", src, dst] -> compress src dst
+    ["decompress", src, dst] -> decompress src dst
+    _ -> error $ unlines
+      [ "Invalid arguments. Expected one of:"
+      , "   compress FILE FILE"
+      , "   decompress FILE FILE"
+      ]
+```
+
+Because we are only using packages that already come with GHC we don't even need cabal an can compile our code directly.
+
+``` bash
+$ ghc -O2 Main.hs -o main
+```
+
+Let's try it out with a text file. We will use Tolstoy's [War and Peace](https://www.gutenberg.org/ebooks/2600).
+``` haskell
+# compress
+$ ./main compress WarAndPeace.txt WarAndPeace.txt.compressed
+Done.
+
+# decompress
+$ ./main decompress WarAndPeace.txt.compressed WarAndPeace.txt.expanded
+Done.
+
+# check that it worked
+$ diff -s WarAndPeace.txt WarAndPeace.txt.expanded
+Files WarAndPeace.txt and WarAndPeace.txt.expanded are identical
+
+# Result. 40% decrease in size.
+$ du -h WarAndPeace*
+3.2M    WarAndPeace.txt
+1.9M    WarAndPeace.txt.compressed
+3.2M    WarAndPeace.txt.expanded
+```
+Now with a binary file. And something a bit bigger.
+
+``` haskell
+$ time ./main compress ghcup ghcup.compressed
+Done.
+
+real    0m15.173s
+user    0m15.035s
+sys     0m0.077s
+
+$ time ./main decompress ghcup.compressed ghcup.decompressed
+Done.
+
+real    0m14.555s
+user    0m14.402s
+sys     0m0.098s
+
+$ ls -lah ghcup* | awk '{ print $5 "\t" $9 }'
+106M    ghcup
+84M     ghcup.compressed
+106M    ghcup.decompressed
+```
+Using `+RTS -s` we can see that the maximum resident set size was less than 300KB
+for handling `ghcup` and both processes used less than 10MB of memory to run.
+
+Check the [profile](https://gist.github.com/lazamar/dac00ad2d90b2b92b3904ee432f0c62c) to see where time is being spent.
+
+## Improvements
+
+The goal for this tool was to have an implementation that was as simple and clear as possible.
+There are plenty of ways we can make it more efficient at the cost of a bit more complexity.
+
+Here are a few that you could give a go at implementing yourself:
+* *Multithreading* - Decode sections of the file in parallel. Because you can't infer where code word boundaries are in a random location of the file,
+    you can add a table at the beginning of the compressed file specifying section boundaries and their expected decoded size so that you can handle them in parallel.
+* *Single-pass encoding* - This would require building the frequency map as you go. Also has the benefit of not requiring you to include it at the beginning of the file.
+    You start with a freq map where every byte has an equal frequency value of 1, then every time you see a byte you encode it first and then update the freq map.
+    The decoder will do the same, decode a byte then update the frequency map. This way the encode and decoder can still understand each other.
+* *Canonical Huffman codes* - Instead of navigating the tree for decoding  in `O(log n)`, we can use the code to index directly into a vector in `O(1)`. It's worth checking the [wiki](https://en.wikipedia.org/wiki/Canonical_Huffman_code) for it.
+* *Faster code creation* - If you try single-pass encoding you will need to make the `CodeMap` creation much faster. The faster ways to create the code words can do it without building a tree the way we did in this post.
+
+And that's it. A usable data compression utility in Haskell.
+
+In the future I may write about using an adaptive dictionary scheme like LZ77. With Huffman codes and LZ77 we can implement gzip.
