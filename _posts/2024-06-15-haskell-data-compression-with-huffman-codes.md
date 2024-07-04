@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Building a data compression utility in Haskell using Huffman codes
+exerpt: We will implement a data compression program in about 150 lines of Haskell. It will use Huffman coding and handle arbitrary binary files using constant memory for encoding and decoding.
 city: Póvoa de Varzim, Portugal 🇵🇹
 ---
 
@@ -116,7 +117,7 @@ Which describes this mapping:
 | A         | `1`        |
 | B         | `01`       |
 | C         | `0011`     |
-| D         | `0110`     |
+| D         | `0010`     |
 | E         | `000`      |
 
 Now, we don't want to use just any complete binary tree.
