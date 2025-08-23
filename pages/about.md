@@ -4,12 +4,12 @@ title: About
 permalink: /about/
 ---
 
-I'm Marcelo Lazaroni, a London based software developer who plays mainly with Haskell.
+I'm [Marcelo Lazaroni](https://www.linkedin.com/in/lazaroni/), a Portugal-based software developer who plays mainly with Haskell.
 
 ![Me and my wife, Sophia](/images/about-me.jpg)
 <small>Rainy day in Amsterdam with the wife</small>
 
-I'm [@marcelolaza](https://twitter.com/Marcelolaza) on Twitter.
+I'm [@lazamar_](https://www.threads.com/@lazamar_) on Threads.
 
 I write mostly about easy things like programming and algorithms. For the days when I feel like writing about the hard stuff like life and people I have [It's all about focus](http://itsallaboutfocus.com/).
 
