@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Developers Meetup - Póvoa de Varzim
-exerpt: Dia 5 de Setembro às 6pm será o primeiro encontro mensal de desenvolvedores na Póvoa de Varzim
+exerpt: Dia 9 de Setembro às 6pm será o primeiro encontro mensal de desenvolvedores na Póvoa de Varzim
 permalink: /povoa/
 city: Póvoa de Varzim, Portugal 🇵🇹
 ---
@@ -16,7 +16,7 @@ city: Póvoa de Varzim, Portugal 🇵🇹
 
 Desenvolvedores de Software da Póvoa, unite!
 
-Dia **5 de Setembro** às **6pm** será o primeiro encontro mensal de desenvolvedores aqui na Póvoa. O objetivo é ter boas conversas e conhecer a malta com interesses em comum.
+Dia **9 de Setembro** às **6pm** será o primeiro encontro mensal de desenvolvedores aqui na Póvoa. O objetivo é ter boas conversas e conhecer a malta com interesses em comum.
 
 Por favor [confirme sua presença!](https://docs.google.com/forms/d/e/1FAIpQLScrrpjzuRFqggGD1ZF_X9dSSROYmG7pr2TstY3OKpUa2gIWtg/viewform?usp=header)
 
@@ -32,7 +32,7 @@ Eu estou organizando o evento e trabalho com compiladores e programação funcio
 
 If you don't speak Portuguese, fear not.
 
-The **5th of September** at **6pm** we shall have the first monthly developers meetup here in Póvoa de Varzim.
+The **9th of September** at **6pm** we shall have the first monthly developers meetup here in Póvoa de Varzim.
 The goal is to have good chats and meet people with common interests.
 
 [Please RSVP!](https://docs.google.com/forms/d/e/1FAIpQLScrrpjzuRFqggGD1ZF_X9dSSROYmG7pr2TstY3OKpUa2gIWtg/viewform?usp=header)
