@@ -6,7 +6,7 @@ permalink: /about/
 
 I'm [Marcelo Lazaroni](https://www.linkedin.com/in/lazaroni/), a Portugal-based software developer who plays mainly with Haskell.
 
-![Haskell Exchange 2019](/images/about-me_.jpg)
+![Giving a talk at the Haskell Exchange 2019](/images/about-me_.jpg)
 <small>Haskell Exchange 2019</small>
 
 I'm into programming languages, databases, and systems software. Much of my work has been in Haskell, particularly around compilers, query languages, and developer infrastructure.
