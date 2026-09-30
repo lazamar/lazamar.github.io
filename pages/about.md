@@ -6,8 +6,16 @@ permalink: /about/
 
 I'm [Marcelo Lazaroni](https://www.linkedin.com/in/lazaroni/), a Portugal-based software developer who plays mainly with Haskell.
 
-![Me and my wife, Sophia](/images/about-me.jpg)
-<small>Rainy day in Amsterdam with the wife</small>
+![Haskell Exchange 2019](/images/about-me.jpg)
+<small>Haskell Exchange 2019</small>
+
+I'm into programming languages, databases, and systems software. Much of my work has been in Haskell, particularly around compilers, query languages, and developer infrastructure.
+
+At Meta, I worked on Glean, a system for storing and querying facts about source code.
+My work included the Haskell query-language compiler, query evaluation, and performance work.
+I recently came back to it, aiming to get recursive query evaluation fully implemented in [Glean](https://github.com/facebookincubator/Glean/issues/736).
+
+I've also worked on developer tooling and distributed systems, and maintain several open-source projects and experiments. More on my [CV](https://gist.github.com/lazamar/17de7650e55f00c2f0590a4ae0bf0b77).
 
 I'm [@lazamar_](https://www.threads.com/@lazamar_) on Threads.
 
