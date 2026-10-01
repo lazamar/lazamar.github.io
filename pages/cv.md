@@ -5,6 +5,7 @@ permalink: /cv/
 head_title: Marcelo Lazaroni – Curriculum Vitae (CV / Resume)
 description: Curriculum vitae (CV, resume) of Marcelo Lazaroni, software engineer working on compilers and database internals. Previously Meta (Glean), Ambar, Standard Chartered.
 keywords: [Curriculum vitae, CV, resume, résumé, Marcelo Lazaroni, software engineer, Haskell, compilers, databases]
+profile: true
 ---
 
 lazaroni.marcelo@gmail.com · [github.com/lazamar](https://github.com/lazamar) · [linkedin.com/in/lazaroni](https://www.linkedin.com/in/lazaroni/) · Porto, Portugal
