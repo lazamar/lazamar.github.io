@@ -1,0 +1,82 @@
+    <!-- Structured data describing who the site is about. Included on pages with `profile: true`. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Person",
+          "@id": "{{ site.url }}/#person",
+          "name": "Marcelo Lazaroni",
+          "alternateName": "lazamar",
+          "url": "{{ site.url }}/",
+          "image": "{{ site.avatar }}",
+          "jobTitle": "Software Engineer",
+          "description": "Software engineer working on compilers and database internals. Worked on the core of Glean, Meta's graph database of facts about code, and implemented recursive queries in Glean.",
+          "homeLocation": { "@type": "Place", "name": "Porto, Portugal" },
+          "alumniOf": { "@type": "CollegeOrUniversity", "name": "University of West London" },
+          "knowsAbout": [
+            "Compilers",
+            "Database internals",
+            "Query languages",
+            "Query evaluation",
+            "Datalog",
+            "Glean",
+            "Haskell",
+            "C++"
+          ],
+          "sameAs": [
+            "https://github.com/lazamar",
+            "https://www.linkedin.com/in/lazaroni/",
+            "https://www.threads.com/@lazamar_",
+            "https://x.com/marcelolaza",
+            "https://hackage.haskell.org/user/lazamar"
+          ]
+        },
+        {
+          "@type": "ProfilePage",
+          "@id": "{{ site.url }}{{ page.url }}",
+          "url": "{{ site.url }}{{ page.url }}",
+          "mainEntity": { "@id": "{{ site.url }}/#person" }
+        },
+        {
+          "@type": "CreativeWork",
+          "@id": "{{ site.url }}/#talk-elm-architecture-haskell",
+          "name": "The Elm Architecture in Haskell: Managing state with multiple threads",
+          "author": { "@id": "{{ site.url }}/#person" },
+          "url": "https://github.com/lazamar/elm-architecture-haskell/blob/master/Elm%20Architecture%20Talk.md",
+          "isBasedOn": "https://github.com/lazamar/elm-architecture-haskell"
+        },
+        {
+          "@type": "Event",
+          "name": "Haskell eXchange 2019",
+          "startDate": "2019-10-10",
+          "location": {
+            "@type": "Place",
+            "name": "CodeNode",
+            "address": { "@type": "PostalAddress", "addressLocality": "London", "addressCountry": "GB" }
+          },
+          "performer": { "@id": "{{ site.url }}/#person" },
+          "workPerformed": { "@id": "{{ site.url }}/#talk-elm-architecture-haskell" }
+        },
+        {
+          "@type": "Event",
+          "name": "Frankfurt Haskell User Group: The Elm Architecture in Haskell",
+          "startDate": "2019-11-14T18:30:00+01:00",
+          "url": "https://www.meetup.com/frankfurt-haskell-user-group/events/265766091/",
+          "location": {
+            "@type": "Place",
+            "name": "codecentric AG",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Kreuznacher Str. 30",
+              "postalCode": "60486",
+              "addressLocality": "Frankfurt am Main",
+              "addressCountry": "DE"
+            }
+          },
+          "performer": { "@id": "{{ site.url }}/#person" },
+          "workPerformed": { "@id": "{{ site.url }}/#talk-elm-architecture-haskell" }
+        }
+      ]
+    }
+    </script>
