@@ -17,7 +17,7 @@ At Meta, I worked on Glean, a system for storing and querying facts about source
 My work included the Haskell query-language compiler, query evaluation, and performance work.
 I recently came back to it, aiming to get recursive query evaluation fully implemented in [Glean](https://github.com/facebookincubator/Glean/issues/736).
 
-I've also worked on developer tooling and distributed systems, and maintain several open-source projects and experiments. More on my <a href="/cv" title="Résumé">CV</a>.
+I've also worked on developer tooling and distributed systems, and maintain several open-source projects and experiments. More on my <a href="/cv/" title="Résumé">CV</a>.
 
 I'm [@lazamar_](https://www.threads.com/@lazamar_) on Threads.
 
