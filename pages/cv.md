@@ -33,7 +33,7 @@ Founding engineer. Led product engineering and direction as the company grew fro
 - **Enabled language-agnostic queue consumption at full speed, no SDK needed**, by building our push protocol's backpressure mechanism, which infers client load from response times and sizes a concurrency window to match. Model-checked and regression-tested in CI.
 - **Taught event sourcing to 300+ engineers** in weekly five-hour courses run to build demand.
 
-### Meta — Software Engineer (IC5)
+### Meta — Software Engineer
 **2021 – 2023** · Haskell, C++ · Code Search Infrastructure
 
 Built core features of Glean, a graph database of facts about code, and of the typed Datalog-like language used to query it. Glean sits behind IDE tooling, code navigation and static analysis company-wide.
