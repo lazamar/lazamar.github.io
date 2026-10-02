@@ -2,7 +2,7 @@
 layout: page
 title: About
 permalink: /about/
-description: About Marcelo Lazaroni, a software engineer in Porto working on compilers, database internals, and infrastructure, mostly in Haskell. Glean at Meta, recursive queries in Glean, open-source projects.
+description: About Marcelo Lazaroni, systems engineer specializing in programming languages, compilers, databases, query engines, and distributed systems. Glean at Meta, recursive queries in Glean, open-source projects.
 profile: true
 ---
 
@@ -26,6 +26,28 @@ I write mostly about easy things like programming and algorithms. For the days w
 Here are a couple of projects I am working on; contributions are very welcome.
 
 ## Projects
+
+## [Glean: recursive query evaluation](https://glean.software/)
+
+Glean is the graph database that powers static analysis and navigation across all of Meta's code.
+
+I originally designed the architecture for recursive query evaluation in Glean while working with Simon Marlow on the Code Search and Indexing team at Meta. In 2026, now as an open-source contributor, I am implementing that design.
+
+The implementation adds demand-driven, bottom-up recursive query evaluation using semi-naive evaluation, suspension/resumption, streaming results, caching, and query-local predicate declarations. It supports mutually recursive predicates and derives only the facts relevant to a query.
+
+It is being merged as a sequence of upstreamable changes, with the complete working implementation and performance tests available on my fork. The design and implementation are documented in Glean [issue #736](https://github.com/facebookincubator/Glean/issues/736).
+
+## [Ambar Emulator](https://github.com/ambarltd/emulator)
+
+The whole Ambar platform in a single statically linked binary that runs on a laptop.
+It has Kafka-like high performance partitioned, durable, ordered queues (30k writes/s, 1M+ reads/s), database consumers, advanced flow control, and replicates an infra setup from a config file.
+
+## [Ambar Tasks](https://github.com/ambarltd/typescript-libs/tree/main/tasks)
+
+Durable, distributed, resumable, and fail-safe workflows embedded in TypeScript applications, with nothing but Postgres behind them. Like Temporal, but with no extra service to run and no separate compilation needed.
+Workflows are monadic and can be resumed by replaying cached results, so they can run for days across restarts and crashes. They compose sequentially and in parallel, cancellation is immediate with guaranteed cleanup, and zombie workers fenced off.
+
+The design was inspired by the paper [Composable Memory Transactions](https://simonmar.github.io/bib/papers/stm.pdf).
 
 ### [Haskell Docs CLI](https://github.com/lazamar/haskell-docs-cli)
 
@@ -58,25 +80,4 @@ Create a fast parser to match dictionary keys in Elm.
 
 ![Dict parser number of operations comparison]({{ site.baseurl }}/images/about-dict-parser.svg)
 
-## [Glean](https://glean.software/)
-
-I'm adding support for recursive query evaluation to Glean, the graph database that powers code analysis and navigation across Meta products.
-There is an [issue](https://github.com/facebookincubator/Glean/issues/736)
-with all the details and links to my working implementation. It follows the plan I [designed](https://gist.github.com/lazamar/02af16b27266f9e9866b0d5e1b857356)
-when I was working full-time on it.
-
-Evaluation is bottom-up and derives only the facts a query needs (a variant of Magic Sets), semi-naive, with suspension and streamed results.
-
-## [Ambar Emulator](https://github.com/ambarltd/emulator)
-
-The whole Ambar platform in a single statically linked binary that runs on a laptop.
-It has Kafka-like high performance partitioned, durable, ordered queues (30k writes/s, 1M+ reads/s), database consumers, advanced flow control, and replicates an infra setup from a config file.
-
-
-## [Ambar Tasks](https://github.com/ambarltd/typescript-libs/tree/main/tasks)
-
-Durable, distributed, resumable, and fail-safe workflows embedded in TypeScript applications, with nothing but Postgres behind them. Like Temporal, but with no extra service to run and no separate compilation needed.
-Workflows are monadic and can be resumed by replaying cached results, so they can run for days across restarts and crashes. They compose sequentially and in parallel, cancellation is immediate with guaranteed cleanup, and zombie workers fenced off.
-
-The design was inspired by the paper [Composable Memory Transactions](https://simonmar.github.io/bib/papers/stm.pdf).
 
