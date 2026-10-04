@@ -40,7 +40,7 @@ It is being merged as a sequence of upstreamable changes, with the complete work
 ## [Ambar Emulator](https://github.com/ambarltd/emulator)
 
 The whole Ambar platform in a single statically linked binary that runs on a laptop.
-It has Kafka-like high performance partitioned, durable, ordered queues (30k writes/s, 1M+ reads/s), database consumers, advanced flow control, and replicates an infra setup from a config file.
+It has Kafka-like high performance partitioned, durable, ordered queues, database consumers, advanced flow control, and replicates an infra setup from a config file.
 
 ## [Ambar Tasks](https://github.com/ambarltd/typescript-libs/tree/main/tasks)
 
